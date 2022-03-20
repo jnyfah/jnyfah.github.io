@@ -15,7 +15,7 @@ export default function About() {
       <div style={{ 
       backgroundImage: `url("https://source.unsplash.com/1L71sPT5XKc")` 
     }}>
-      <div class="mx-auto pt-12 max-w-4xl h-auto">
+      <div className="mx-auto pt-12 max-w-4xl h-auto">
       <img src={require('../public/assets/blog/authors/avatar.jpg')}></img>
       </div>
     </div>
