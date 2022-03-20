@@ -1,10 +1,10 @@
 {
-  "name": "sandypockets-nextjs-blog-starter",
+  "name": "jnyfah.github.io",
   "version": "0.1.11",
   "description": "A create-next-app blog starter",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sandypockets/nextjs-blog-starter/issues"
+    "url": "https://github.com/jnyfah/jnyfah.github.io/issues"
   },
   "scripts": {
     "dev": "next",
@@ -17,9 +17,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/sandypockets/nextjs-blog-starter.git"
+    "url": "https://github.com/jnyfah/jnyfah.github.io.git"
   },
-  "homepage": "https://blog-starter.sandypockets.dev",
+  "homepage": "https://jenniferchukw.com",
   "dependencies": {
     "@headlessui/react": "^1.4.0",
     "@heroicons/react": "^1.0.4",

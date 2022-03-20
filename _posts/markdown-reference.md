@@ -5,7 +5,7 @@ coverImage: '/assets/blog/markdown-reference/book.jpg'
 date: '2021-08-24T05:35:07.322Z'
 author:
   name: sandypockets
-  picture: '/assets/blog/authors/sandypockets_avatar.jpg'
+  picture: '/assets/blog/authors/avatar.jpg'
 ogImage:
   url: '/assets/blog/nextjs-for-blogs/cover.jpg'
 ---

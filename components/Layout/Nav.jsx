@@ -14,10 +14,6 @@ const navigation = [
     name: 'About',
     href: '/about',
   },
-  {
-    name: 'Contact',
-    href: '/contact',
-  },
 ]
 
 function classNames(...classes) {
@@ -42,7 +38,7 @@ export default function Nav({ darkMode, setDarkMode }) {
                 <div className="flex-shrink-0 flex items-center pr-4">
                   <Highlight>
                     <Link href={'/'}>
-                      <a>SANDYPOCKETS</a>
+                      <a>JENNIFER CHUKWU</a>
                     </Link>
                   </Highlight>
                 </div>

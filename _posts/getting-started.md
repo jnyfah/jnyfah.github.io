@@ -4,8 +4,8 @@ excerpt: 'Everything you need to know to get a Next.js blog up and running.'
 coverImage: '/assets/blog/getting-started/snowy-mountain.jpg'
 date: '2021-08-24T05:35:07.322Z'
 author:
-  name: sandypockets
-  picture: '/assets/blog/authors/sandypockets_avatar.jpg'
+  name: Jennifer
+  picture: '/assets/blog/authors/avatar.jpg'
 ogImage:
   url: '/assets/blog/getting-started/cover.jpg'
 ---
@@ -198,7 +198,7 @@ coverImage: '/assets/blog/dynamic-routing/tree.jpg'
 date: '2021-08-24T05:35:07.322Z'
 author:
   name: sandypockets
-  picture: '/assets/blog/authors/sandypockets_avatar.jpg'
+  picture: '/assets/blog/authors/avatar.jpg'
 ogImage:
   url: '/assets/blog/dynamic-routing/tree.jpg'
 ---
