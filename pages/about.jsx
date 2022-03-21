@@ -15,14 +15,14 @@ export default function About() {
         <section className="max-w-3xl mx-auto py-8 md:py-16 lg:py-24">
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gridGap: 0 }}>
         <div style={{ 
-      backgroundColor: 'rgba(52, 52, 52, 0.8)'
+      backgroundColor: 'rgba(50, 50, 50, 0.5)'
     }}>
           <br/>
           <p>&nbsp; &#128188; &nbsp;&nbsp; SWE @ Microsoft</p>
           <br/>
           <p>&nbsp; &#127760; &nbsp;&nbsp; Jupiter</p>
           <br/>
-          <p>&nbsp; &#129337; &nbsp;&nbsp; C/C++, Python and Rust</p>
+          <p>&nbsp; &#129337; &nbsp;&nbsp; C/C++ | Python | Rust</p>
           <br/>
           <p>&nbsp; &#11088; &nbsp;&nbsp; she/her</p>
        </div>
