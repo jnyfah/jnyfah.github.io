@@ -11,20 +11,20 @@ export default function About() {
         <title>About | {BLOG_NAME}</title>
       </Head>
       <Container>
-        <PageHeading>kobayashi maru ...</PageHeading>
+        <PageHeading>kobayashi maru</PageHeading>
         <section className="max-w-3xl mx-auto py-8 md:py-16 lg:py-24">
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gridGap: 0 }}>
         <div style={{ 
       backgroundColor: 'rgba(50, 50, 50, 0.5)'
     }}>
           <br/>
-          <p>&nbsp; &#128188; &nbsp; SWE @ Microsoft</p>
+          <p>&nbsp; &#128188; SWE @ Microsoft</p>
           <br/>
-          <p>&nbsp; &#127760; &nbsp; Jupiter</p>
+          <p>&nbsp; &#127760; Jupiter</p>
           <br/>
-          <p>&nbsp; &#129337; &nbsp; C/C++ | Python | Rust</p>
+          <p>&nbsp; &#129337; C/C++ | Python | Rust</p>
           <br/>
-          <p>&nbsp; &#11088; &nbsp; she/her</p>
+          <p>&nbsp; &#11088; she/her</p>
        </div>
        <div>
        <img src="assets/blog/authors/avatar.jpg" alt="BigCo Inc. logo"/>
