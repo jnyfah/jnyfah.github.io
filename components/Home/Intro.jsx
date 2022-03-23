@@ -5,7 +5,7 @@ export default function Intro() {
         Kelechi.
       </h1>
       <h4 className="text-center md:text-left text-lg mt-5 md:pl-8">
-      Systems Engineering || Machine Learning || History || Finance
+      Systems Engineering || Machine Learning || C++ || Rust
       </h4>
     </section>
   )
