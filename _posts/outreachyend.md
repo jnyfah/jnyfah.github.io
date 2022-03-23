@@ -10,14 +10,7 @@ ogImage:
   url: '/assets/blog/wrapup.jpg'
 ---
 
- Well well, its the 3rd week on outreachy internship journey and so far so good its going well even tho I am a bit packed, trying to juggle the holiday activities and coding 🤹 but guess what Enarx is going on break till 4th January, i guess that will give me time to clear some back logs.
+shheeshhhh, I cant belive outreachy is over, feels surreal like common i just started this few weeks ago!, well it is what its, this past three most has been whole some, from learning Rust from scratch to getting to fall inlove with Rust (dont worry i am still a c++ girl), to learning all about confidential computing and web assembly, to networking with alot of people, yea you can tell it was awesome.
 
-On my todo list I have 3 pending blogs, this particular blog, a blog on Trusted Executed Enviroments and a blog on Confidential Computing Consortuim. 🙆 Alright enough about that, lets talk about my recent struggles with Enarx project
-
-To be honest I have an awesome mentor, Nick Vidal has been so helpful and patient, but at first i always wanted to solve most problems on my own so as not to feel incompetent. For example, I have been trying to access enarx lab machine but i couldnt for about 2 days, instead of reaching out to my mentor I tried to solve it on my own not knowing it was a server issue from the lab machine and no matter how much i tried i wont be able to access it till it is rebooted. oh, well luckly for me i have amazing co interns, one of them reached out that she was having same issue and has reached out to the mentor, who told her what the issue was
-
-So guys i spent hours trobuleshotting something i have no power over 😆, i pratically wasted time, well thats a lesson for me, there is no shame in struggling, no one knows it all, ask for help every time you have to ! 🙂.
-
-Happy Holidays from the Enarx family and confidential computing Consortuim ! 🤩🤩 
-
-![Enarx](/assets/blog/MerryChristmas.png)
+The main task for this internship was to create demos on how deploy workloads on enarx regardless and show case ho enarx works and why confidential computing is important, I created a machine learning demo wih Rust
+First month was just all about getting to know more about Enarx and web assembly, playing around with WASI

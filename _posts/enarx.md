@@ -1,6 +1,6 @@
 ---
 title: 'Outreachy- Think about my Audience- Introducing Enarx'
-excerpt: 'Running an application in TEE's is not that simple as there are diffrent silicon vendors with diffrent TEE's that means you need to develop you application specific to that platform, which means no portability..'
+excerpt: ' Running an application in the TEE is not that simple as there are diffrent silicon vendors with diffrent TEE, that means you have to develop your application specific to that platform, which means no protability'
 coverImage: '/assets/blog/enarx.png'
 date: '2022-01-03T11:37:01.491Z'
 author:
