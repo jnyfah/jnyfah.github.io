@@ -1,6 +1,6 @@
 ---
 title: 'Outreachy- Think about my Audience- Introducing Enarx'
-excerpt: 'So guys i spent hours trobuleshotting something i had no power over 😆, i pratically wasted time, well thats a lesson for me, there is no shame in struggling'
+excerpt: 'Running an application in TEE's is not that simple as there are diffrent silicon vendors with diffrent TEE's that means you need to develop you application specific to that platform, which means no portability..'
 coverImage: '/assets/blog/enarx.png'
 date: '2022-01-03T11:37:01.491Z'
 author:
