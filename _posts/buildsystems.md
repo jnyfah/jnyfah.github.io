@@ -1,6 +1,6 @@
 ---
 title: 'Build systems -C++'
-excerpt: 'build systems'
+excerpt: 'You must first understand how to build a code. what does it actually mean to build a code ?, how diffrent is it from compiling and running ??? I just hope this blog dosent get too long 💀💀😂'
 coverImage: '/assets/blog/build.jpg'
 date: '2022-03-29T11:37:01.491Z'
 author:
