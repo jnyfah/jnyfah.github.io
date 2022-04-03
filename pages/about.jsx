@@ -11,7 +11,7 @@ export default function About() {
         <title>About | {BLOG_NAME}</title>
       </Head>
       <Container>
-        <PageHeading>Kaizen 改善,</PageHeading>
+        <PageHeading>Kaizen 改善</PageHeading>
         <section className="max-w-3xl mx-auto py-8 md:py-16 lg:py-24">
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gridGap: 0 }}>
         <div style={{ 
