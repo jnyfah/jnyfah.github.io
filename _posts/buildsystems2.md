@@ -1,6 +1,6 @@
 ---
 title: 'Build systems -C++ (PART 2)'
-excerpt: 'What happens when a new directory or file is added to the project? Do we have to keep manually editing thr build script tho acommodate new stuffs? 🤦'
+excerpt: 'What happens when a new directory or file is added to the project? Do we have to keep manually editing the build script tho acommodate new stuffs? 🤦'
 coverImage: '/assets/blog/build.jpg'
 date: '2022-04-02T11:37:01.491Z'
 author:
@@ -50,10 +50,16 @@ int main() {
 }
 ```
 
-##### Building
+##### Building  🙂
 To build the project and create an executable means that we will compile all the sources within its code base to first produce some object files and finally combine those object files to produce the final products, such as static libraries or executables.
 
-Yes you read that right 😑 , if they are 1000 source files, we have to compile them one after the other this means that we have to run the compiler 1000 times!. 😑 
+Yes you read that right 😑 , if they are 1000 source files, we have to compile them one after the other this means that we have to run the compiler 1000 times!. 😫 
+
+<p align="center">
+    <img src="/assets/gifs/6E2.gif">
+</p>
+
+---
 
 Now lets see what goes on behind the scenes
 
@@ -89,7 +95,7 @@ note that preprocessing, compilation, and assembling are done as part of the pre
 
 4. Linking: we still havent gotten an product from all the steps above, also we have 2 object files generated from the 2 source files we have. This section combines those object files to form a final program
 
-**Okay, okay back to build systems .....** 😮‍💨😮‍💨
+**Okay, okay back to build systems 🤓....**
 
 If we want to build the above project without using a build system, we must run the following commands in order to build its products. Note that I used Linux as the target platform for this project:
 
@@ -102,7 +108,7 @@ g++ main.o test.o -o main
 We can simply save the following command in a `.sh` or `.bat` file as the case may be, but then this commands can grow as the number of source files grows. you can actually maintain the preceding commands in a shell script file called a build script but then questions like..
 
 - can run the same commands on all platforms? i.e portability 
-- What happens when a new directory or file is added to the project? Do we have to keep manually editing thr build script tho acommodate new stuffs?
+- What happens when a new directory or file is added to the project? Do we have to keep manually editing the build script tho acommodate new stuffs?
 - What happens if we need a new product, like a new library or a new executable file
 
-In summary a  good build system should handle all of the situations mentioned covered above plus i just wanted to explain a little bit of what happens under the hood in cpp 🤷🤷
+In summary a  good build system should handle all of the situations mentioned covered above plus i just wanted to us this as an excuse to explain a little bit of what happens under the hood in cpp programs 🤷🤷
