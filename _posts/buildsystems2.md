@@ -1,6 +1,6 @@
 ---
 title: 'Build systems -C++ (PART 2)'
-excerpt: 'You must first understand how to build a code. what does it actually mean to build a code ?, how diffrent is it from compiling and running ??? I just hope this blog dosent get too long 💀💀😂'
+excerpt: 'What happens when a new directory or file is added to the project? Do we have to keep manually editing thr build script tho acommodate new stuffs? 🤦'
 coverImage: '/assets/blog/build.jpg'
 date: '2022-04-02T11:37:01.491Z'
 author:
@@ -105,4 +105,4 @@ We can simply save the following command in a `.sh` or `.bat` file as the case m
 - What happens when a new directory or file is added to the project? Do we have to keep manually editing thr build script tho acommodate new stuffs?
 - What happens if we need a new product, like a new library or a new executable file
 
-In summary a  good build system should handle all of the situations mentioned covered above plus i just wanted to explain a little bit of what happens under the hood in cpp 
+In summary a  good build system should handle all of the situations mentioned covered above plus i just wanted to explain a little bit of what happens under the hood in cpp 🤷🤷
