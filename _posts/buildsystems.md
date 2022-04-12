@@ -1,13 +1,13 @@
 ---
-title: 'Build systems -C++'
+title: 'Build systems -C++ (PART 1)'
 excerpt: 'You must first understand how to build a code. what does it actually mean to build a code ?, how diffrent is it from compiling and running ??? I just hope this blog dosent get too long 💀💀😂'
-coverImage: '/assets/blog/build.jpg'
+coverImage: '/assets/blog/build2.jpg'
 date: '2022-03-29T11:37:01.491Z'
 author:
   name: Jennifer
   picture: '/assets/blog/authors/avatar.jpg'
 ogImage:
-  url: '/assets/blog/build.jpg'
+  url: '/assets/blog/build2.jpg'
 ---
 
 > Build Systems are tools used to automate the build process of projects while avoiding common build-related errors.
