@@ -41,13 +41,12 @@ The lifecycle management of source code and build output files are independent a
 
 **Dependency Management:** This means that the build system detects the target code base's dependencies, downloads them all, and uses the artifacts downloaded during the build process. This is quite useful, especially if a project has a lot of dependencies. 
 
-There are a lot more benefits of using build systems that i might have not mentioned here 🤷‍♂️. Hopefully, you now understand why modern software development requires build systems. Next we would look at one of the most popular C/C++ build systems CMake 😁
+There are a lot more benefits of using build systems that i might have not mentioned here 🤷‍♂️. Hopefully, you now understand why modern software development requires build systems.
 
 
 ###### Open Source C/C++ Build systems you can explore include :
 
 - Make
-- Modern CMake
 - MsBuild
 - Ninja
 - Meson

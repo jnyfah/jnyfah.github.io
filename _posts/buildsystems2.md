@@ -81,7 +81,7 @@ running this same command with main.cpp will produce a large input because it co
 
 2. Compiling: Here the input is the translation unit from the preprocessor and its output is an assmebly code specific to your target architecture
 
-To see resulting assembly code, use this command:
+To see resulting assembly code, use the comand bellow, it dumps the ouput in a `.s` file in same folder
 ```
 $ gcc -S main.cpp
 ```
@@ -91,7 +91,7 @@ $ gcc -S main.cpp
 ```
 $ gcc -C main.cpp
 ```
-note that preprocessing, compilation, and assembling are done as part of the preceding single command
+note that preprocessing, compilation, and assembling are done as part of the preceding single command and it generates a `.o` file that unfortunatley, we cant open 🤷
 
 4. Linking: we still havent gotten an product from all the steps above, also we have 2 object files generated from the 2 source files we have. This section combines those object files to form a final program
 
@@ -100,15 +100,43 @@ note that preprocessing, compilation, and assembling are done as part of the pre
 If we want to build the above project without using a build system, we must run the following commands in order to build its products. Note that I used Linux as the target platform for this project:
 
 ```markdown
+mkdir -p out
 g++ -g -o main.o -c main.cpp
 g++ -g -o test.o -c test.cpp
 g++ main.o test.o -o main
 ./main
 ```
-We can simply save the following command in a `.sh` or `.bat` file as the case may be, but then this commands can grow as the number of source files grows. you can actually maintain the preceding commands in a shell script file called a build script but then questions like..
 
-- can run the same commands on all platforms? i.e portability 
-- What happens when a new directory or file is added to the project? Do we have to keep manually editing the build script tho acommodate new stuffs?
+but then this commands can grow as the number of source files grows. you can actually maintain the preceding commands in a shell script file but then questions like..
+
+- can I run the same commands on all platforms? i.e portability 
+- What happens when a new directory or file is added to the project? Do we have to keep manually editing the shell script tho acommodate new stuffs?
 - What happens if we need a new product, like a new library or a new executable file
 
-In summary a  good build system should handle all of the situations mentioned covered above plus i just wanted to us this as an excuse to explain a little bit of what happens under the hood in cpp programs 🤷🤷
+
+Lets try Makefiles, I am going to try to write a makefile for this, please dont judge i am not good with make, so here goes nothing 🙈
+
+
+```
+build: main.o test.o
+    g++ main.o test.o -o build
+
+main.o: main.cpp
+    g++ -c main.cpp
+
+test.o: test.cpp test.hpp
+    g++ -c test.cpp
+
+clean: 
+    rm *.o build
+``` 
+
+Trust me, if you are as lazy as I am, you defintly dont wanna write makefiles ! 🏃🏾‍♂️😂
+
+So how is this diffrent from the shell script file we wrote before  🤔, well unlike shell files makefiles include a lot of control flow mechanisms (loops, conditions, and so on), we can declare a variable in a Makefile and use it in various places, make files can also check for recent modeifications in a file, if there are none it skips the build and trust me, you cant get this features in shell scripts 
+
+Intresting but but ... if you have the source codes and makefile of a C++ project from your Linux machine, you cannot directly build that code inside Windows OS and vice versa!, so it still lacks portability 🤷 **this is where CMake comes in** and cmake even generates the makefiles for you automatically, whhew 😫
+
+Okay that sums it up, there are other amazing build systems one might still consider such as [GNU Autotool](https://en.wikipedia.org/wiki/GNU_Autotools), I plan to give it a try soonest 🙂!
+
+
