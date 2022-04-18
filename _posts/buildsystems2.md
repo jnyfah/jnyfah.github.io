@@ -14,7 +14,7 @@ After going through the [previous post on build systems](/posts/buildsystems/), 
 
 But first we have to understand how compilation and linking works in C/C++ as it is vital to know how the pipeline produces the executable and library files from the source code in other to fully understand why build systems are important.
 
-and PS: for this article lets assume we are following cpp best pratices 😁
+and PS: for this article let's assume we are following cpp best pratices 😁
 
 We know that all cpp code bases or projects have source files (.cpp) and header files (.hpp). The header file usually contains enumerations, macros,  declarations of functions, global variables, and structures while the source files contain the function definitions. For this article we would create a simple c++ program with 3 files 
 
@@ -61,7 +61,7 @@ Yes you read that right 😑 , if they are 1000 source files, we have to compile
 
 ---
 
-Now lets see what goes on behind the scenes
+Now let's see what goes on behind the scenes
 
 The source code is fed through a pipeline with four unique sections, each of which performs a specific task. Each section in this pipeline takes a specific input from the one before it and creates a specific output for the section after it. This procedure continues along the pipeline until the last section generates a product. These sections are as follows:
 - Preprocessor
@@ -69,9 +69,9 @@ The source code is fed through a pipeline with four unique sections, each of whi
 - Assembler
 - Linker
 
-Lets go indepth a bit 😌😌
+Let's go indepth a bit 😌😌
 
-1. Preprocessing: This section simply copies the content of the header files and resolves the preprosser directives, the output of this section is a translation unit
+1. Preprocessing: This section simply copies the content of the header files and resolves the preprocessor directives, the output of this section is a translation unit
 
 To see the translation unit of your code, use this command :
 ```
@@ -93,7 +93,7 @@ $ gcc -C main.cpp
 ```
 note that preprocessing, compilation, and assembling are done as part of the preceding single command and it generates a `.o` file that unfortunatley, we cant open 🤷
 
-4. Linking: we still havent gotten an product from all the steps above, also we have 2 object files generated from the 2 source files we have. This section combines those object files to form a final program
+4. Linking: we still havent gotten a product from all the steps above, also we have 2 object files generated from the 2 source files we have. This section combines those object files to form a final program
 
 **Okay, okay back to build systems 🤓....**
 
@@ -113,8 +113,9 @@ but then this commands can grow as the number of source files grows. you can act
 - What happens when a new directory or file is added to the project? Do we have to keep manually editing the shell script tho acommodate new stuffs?
 - What happens if we need a new product, like a new library or a new executable file
 
+---
 
-Lets try Makefiles, I am going to try to write a makefile for this, please dont judge i am not good with make, so here goes nothing 🙈
+Let's try Makefiles, I am going to try to write a makefile for this, please don't judge i am not good with make, so here goes nothing 🙈
 
 
 ```
@@ -131,11 +132,11 @@ clean:
     rm *.o build
 ``` 
 
-Trust me, if you are as lazy as I am, you defintly dont wanna write makefiles ! 🏃🏾‍♂️😂
+Trust me, if you are as lazy as I am, you definitely don't wanna write makefiles ! 🏃🏾‍♂️😂
 
-So how is this diffrent from the shell script file we wrote before  🤔, well unlike shell files makefiles include a lot of control flow mechanisms (loops, conditions, and so on), we can declare a variable in a Makefile and use it in various places, make files can also check for recent modeifications in a file, if there are none it skips the build and trust me, you cant get this features in shell scripts 
+So how is this different from the shell script file we wrote before  🤔, well unlike shell files makefiles include a lot of control flow mechanisms (loops, conditions, and so on), we can declare a variable in a Makefile and use it in various places, make files can also check for recent modifications in a file, if there are none it skips the build and trust me, you can not get this features in shell scripts 
 
-Intresting but but ... if you have the source codes and makefile of a C++ project from your Linux machine, you cannot directly build that code inside Windows OS and vice versa!, so it still lacks portability 🤷 **this is where CMake comes in** and cmake even generates the makefiles for you automatically, whhew 😫
+Intresting but... if you have the source codes and makefile of a C++ project from your Linux machine, you cannot directly build that code inside Windows OS and vice versa!, so it still lacks portability 🤷 **this is where CMake comes in** and cmake even generates the makefiles for you automatically, whhew 😫
 
 Okay that sums it up, there are other amazing build systems one might still consider such as [GNU Autotool](https://en.wikipedia.org/wiki/GNU_Autotools), I plan to give it a try soonest 🙂!
 
