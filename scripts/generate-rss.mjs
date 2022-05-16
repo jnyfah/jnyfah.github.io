@@ -4,13 +4,13 @@ import { globby } from 'globby'
 import fs from 'fs'
 import matter from 'gray-matter'
 
-const BLOG_URL = 'https://jenniferchukwu.com'
+const BLOG_URL = 'https://blog-starter.sandypockets.dev'
 
 async function generate() {
   const allBlogs = await globby(['_posts/*.md'])
 
   const feed = new RSS({
-    title: 'Jennifer Chukwu',
+    title: 'Next.js Blog Starter',
     site_url: BLOG_URL,
     feed_url: `${BLOG_URL}/feed.xml`,
   })

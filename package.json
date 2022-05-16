@@ -1,10 +1,10 @@
 {
-  "name": "jnyfah.github.io",
-  "version": "2.0",
-  "description": "A next-app blog",
+  "name": "sandypockets-nextjs-blog-starter",
+  "version": "1.0.0",
+  "description": "A create-next-app blog starter",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jnyfah/jnyfah.github.io/issues"
+    "url": "https://github.com/sandypockets/nextjs-blog-starter/issues"
   },
   "scripts": {
     "dev": "next",
@@ -13,13 +13,14 @@
     "lint": "prettier ./ --write && next lint",
     "postbuild": "node ./scripts/generate-sitemap.mjs && node ./scripts/generate-rss.mjs",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "new": "node ./scripts/generate-post.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jnyfah/jnyfah.github.io.git"
+    "url": "https://github.com/sandypockets/nextjs-blog-starter.git"
   },
-  "homepage": "https://jenniferchukw.com",
+  "homepage": "https://blog-starter.sandypockets.dev",
   "dependencies": {
     "@headlessui/react": "^1.4.0",
     "@heroicons/react": "^1.0.4",
@@ -29,20 +30,20 @@
     "classnames": "2.2.6",
     "date-fns": "2.16.1",
     "gray-matter": "4.0.2",
-    "next": "^12.1.6",
+    "next": "^12.1.0",
     "prism-themes": "^1.9.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "remark": "13.0.0",
-    "remark-html": "^13.0.2",
+    "remark-html": "13.0.1",
     "remark-prism": "^1.3.6"
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",
     "@storybook/addon-actions": "^6.3.7",
-    "@storybook/addon-essentials": "^5.3.21",
+    "@storybook/addon-essentials": "^6.3.7",
     "@storybook/addon-links": "^6.3.7",
-    "@storybook/react": "^6.1.21",
+    "@storybook/react": "^6.3.7",
     "autoprefixer": "^10.4.0",
     "babel-loader": "^8.2.2",
     "eslint": "^8.11.0",
