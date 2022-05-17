@@ -1,6 +1,6 @@
 ---
 title: 'Build systems -CMake'
-excerpt: 'You must first understand how to build a code. what does it actually mean to build a code ?, how diffrent is it from compiling and running ??? I just hope this blog dosent get too long 💀💀😂'
+excerpt: 'Another thing is CMake allows you to determine the platform you're working on and adjust your actions accordingly. This is accomplished by looking at CMAKE SYSTEM NAME, one of CMake's many internal variables'
 coverImage: '/assets/blog/cmake.png'
 date: '2022-04-10T11:37:01.491Z'
 author:
