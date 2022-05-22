@@ -10,11 +10,11 @@ ogImage:
   url: '/assets/blog/build.jpg'
 ---
 
-After going through the [previous post on build systems](/posts/buildsystems/), I felt there was a need to go indepth with examples 
+After going through the [previous post on build systems](/posts/buildsystems/), I felt there was a need to go in-depth with examples 
 
 But first we have to understand how compilation and linking works in C/C++ as it is vital to know how the pipeline produces the executable and library files from the source code in other to fully understand why build systems are important.
 
-and PS: for this article let's assume we are following cpp best pratices 😁
+and PS: for this article let's assume we are following cpp best practices 😁
 
 We know that all cpp code bases or projects have source files (.cpp) and header files (.hpp). The header file usually contains enumerations, macros,  declarations of functions, global variables, and structures while the source files contain the function definitions. For this article we would create a simple c++ program with 3 files 
 
@@ -40,7 +40,7 @@ int addNumbers(int num1, int num2){
 ```
 
 3. **Another Source file - main.cpp**
-The main function is the entry point of the program, the main function calls the addNumber functions with arguements
+The main function is the entry point of the program, the main function calls the addNumber functions with arguments
 ```c++
 #include <iostream>
 #include "test.hpp"
@@ -69,7 +69,7 @@ The source code is fed through a pipeline with four unique sections, each of whi
 - Assembler
 - Linker
 
-Let's go indepth a bit 😌😌
+Let's go in-depth a bit 😌😌
 
 1. Preprocessing: This section simply copies the content of the header files and resolves the preprocessor directives, the output of this section is a translation unit
 
@@ -79,9 +79,9 @@ $ gcc -E test.cpp
 ```
 running this same command with main.cpp will produce a large input because it contains iostream library
 
-2. Compiling: Here the input is the translation unit from the preprocessor and its output is an assmebly code specific to your target architecture
+2. Compiling: Here the input is the translation unit from the preprocessor and its output is an assembly code specific to your target architecture
 
-To see resulting assembly code, use the comand bellow, it dumps the ouput in a `.s` file in same folder
+To see resulting assembly code, use the command bellow, it dumps the output in a `.s` file in same folder
 ```
 $ gcc -S main.cpp
 ```
@@ -91,9 +91,9 @@ $ gcc -S main.cpp
 ```
 $ gcc -C main.cpp
 ```
-note that preprocessing, compilation, and assembling are done as part of the preceding single command and it generates a `.o` file that unfortunatley, we cant open 🤷
+note that preprocessing, compilation, and assembling are done as part of the preceding single command and it generates a `.o` file that unfortunately, we cant open 🤷
 
-4. Linking: we still havent gotten a product from all the steps above, also we have 2 object files generated from the 2 source files we have. This section combines those object files to form a final program
+4. Linking: we still haven't gotten a product from all the steps above, also we have 2 object files generated from the 2 source files we have. This section combines those object files to form a final program
 
 **Okay, okay back to build systems 🤓....**
 
@@ -110,7 +110,7 @@ g++ main.o test.o -o main
 but then this commands can grow as the number of source files grows. you can actually maintain the preceding commands in a shell script file but then questions like..
 
 - can I run the same commands on all platforms? i.e portability 
-- What happens when a new directory or file is added to the project? Do we have to keep manually editing the shell script tho acommodate new stuffs?
+- What happens when a new directory or file is added to the project? Do we have to keep manually editing the shell script tho accommodates new stuffs?
 - What happens if we need a new product, like a new library or a new executable file
 
 ---
@@ -136,7 +136,7 @@ Trust me, if you are as lazy as I am, you definitely don't wanna write makefiles
 
 So how is this different from the shell script file we wrote before  🤔, well unlike shell files makefiles include a lot of control flow mechanisms (loops, conditions, and so on), we can declare a variable in a Makefile and use it in various places, make files can also check for recent modifications in a file, if there are none it skips the build and trust me, you can not get this features in shell scripts 
 
-Intresting but... if you have the source codes and makefile of a C++ project from your Linux machine, you cannot directly build that code inside Windows OS and vice versa!, so it still lacks portability 🤷 **this is where CMake comes in** and cmake even generates the makefiles for you automatically, whhew 😫
+Interesting but... if you have the source codes and makefile of a C++ project from your Linux machine, you cannot directly build that code inside Windows OS and vice versa!, so it still lacks portability 🤷 **this is where CMake comes in** and cmake even generates the makefiles for you automatically, whhew 😫
 
 Okay that sums it up, there are other amazing build systems one might still consider such as [GNU Autotool](https://en.wikipedia.org/wiki/GNU_Autotools), I plan to give it a try soonest 🙂!
 

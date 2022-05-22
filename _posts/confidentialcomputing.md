@@ -1,5 +1,5 @@
 ---
-title: 'Confidential Computing Consortuim'
+title: 'Confidential Computing Consortium'
 excerpt: 'Who are they ??,  Why do they do it ??, okay wait I know you are confused 😂, Hold on, I will explain in a minute 😁'
 coverImage: '/assets/blog/Capture3.JPG'
 date: '2021-12-18T11:37:01.491Z'
@@ -19,9 +19,9 @@ ogImage:
 
 You will be able to answer these question once you are half way on this post 😁
 
-The Confidential Computing Consortium is a Community focused on open source licensed projects securing data in use by performing computation in hardware based Trusted Execution Enviroments (TEE) and accelerating the adoption of confidential computing through open collaboration.
+The Confidential Computing Consortium is a Community focused on open source licensed projects securing data in use by performing computation in hardware based Trusted Execution Environments (TEE) and accelerating the adoption of confidential computing through open collaboration.
 
-okay wait I know you are confused 😂, like what the heck is a Trusted Execution Enviroment and data in use, what does it all mean ???
+okay wait I know you are confused 😂, like what the heck is a Trusted Execution Environment and data in use, what does it all mean ???
 
 ![C3](/assets/blog/UKe.gif)
 
@@ -31,17 +31,17 @@ In computing, data exists in three states: _in transit_, _at rest_, and _in use_
 
 -   Data at rest - inactive data is encrypted when stored in a blob storage or database.
 
--   Data in transit - Data travelling from network to network or from local storage to cloud storage is protected using https or TLS.
+-   Data in transit - Data traveling from network to network or from local storage to cloud storage is protected using https or TLS.
 
--   Data in use - ????? 😕i.e proctect data in use while in ram or during computation.
+-   Data in use - ????? 😕i.e protect data in use while in ram or during computation.
 
 _I know what you are thinking ... why do we have to protect data in use_ 😐
 
 Lets imagine storing you data in cloud, since we all know data at rest is encrypted you are safe, but imagine you want to process the data in the cloud, you would have to decrypt it while its in the cloud because you clearly cant work with an encrypted data 🙆, so yea the data is now in a vulnerable state!
 
 A perfect scenario of this would be mobile, edge, and IoT devices - where processing takes place in remote. some common threats include:
-Malicious priviledged admins
-Hackers exploiting bugs in the infastructure
+Malicious privileged admins
+Hackers exploiting bugs in the infrastructure
 Third party access without customer consent
 
 ## So What are Trusted Execution Environments ?🔐
@@ -56,7 +56,7 @@ Unauthorized entities in the context of confidential computing could include oth
 
 -   🔑**Code integrity** - refers to the fact that unauthorized entities cannot replace or modify the code in the TEE.
 
-Together, these attributes provide not only an assurance that the data is kept secure, but also that the computations performed are actually the correct computations, allowing one to trust the results of the computation as well. More on [Trusted Execution Enviroments here](http://jenniferchukwu.com/posts/trustedexecution)
+Together, these attributes provide not only an assurance that the data is kept secure, but also that the computations performed are actually the correct computations, allowing one to trust the results of the computation as well. More on [Trusted Execution Environments here](http://jenniferchukwu.com/posts/trustedexecution)
 
 ## Why use confidential computing 🙋
 

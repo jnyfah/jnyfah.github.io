@@ -78,7 +78,7 @@ For testing purposes, you may want to create an executable with debugging inform
 cmake -DCMAKE_BUILD_TYPE=Debug ..
 ```
 
-__Sources to get more indepth on CMake:__
+__Sources to get more in-depth on CMake:__
 
 [Jason Turner — C++ Weekly - Ep 208 - The Ultimate CMake / C++ Quick Start](https://www.youtube.com/watch?v=YbgH7yat-Jo)
 

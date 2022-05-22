@@ -1,6 +1,6 @@
 ---
 title: 'String vs String_view'
-excerpt: 'CMake does not build the project, it generates the files needed by your build tool(make, ninja etc). This means CMake is a build script generator and acts as a generator for other build systems'
+excerpt: 'Applying this logic to string_view, it means string_view is the window, which is only a view of the string and cannot be used to modify the actual string. it allows you to point into an existing string at some offset'
 coverImage: '/assets/blog/string.jpg'
 date: '2022-05-20T11:37:01.491Z'
 author:
@@ -14,7 +14,7 @@ ogImage:
 
 String_view from the name is literally just a view to the original data or a view of a string, lets assume u live a house with a window, and looking out of the window you see a beach, but u cant touch the waters or change the colors of the  sands on the beach because your window only provides a view, but then you can actually change the angle from which you view the beach by standing by the side of the window 🤷‍♂️, you can add blinds or blurry glasses that would change your view of the beach, you can even add a curtain and close either the left or right curtain to reduce what you can see, but all this does not in any way change the beach!, modifying the view does not change the original.
 
-Applying this logic to string_view, it means string_view is the window which is only a view of the string and cannot be used to modify the actual string. it allows you to point into an existing string at some offset.
+Applying this logic to string_view, it means string_view is the window, which is only a view of the string and cannot be used to modify the actual string. it allows you to point into an existing string at some offset.
 
 ![Some alt text](/assets/blog/window.jpg)
 
