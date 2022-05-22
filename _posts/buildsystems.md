@@ -1,6 +1,6 @@
 ---
 title: 'Build systems -C++ (PART 1)'
-excerpt: 'You must first understand how to build a code. what does it actually mean to build a code ?, how diffrent is it from compiling and running ??? I just hope this blog dosent get too long 💀💀😂'
+excerpt: 'You must first understand how to build a code. what does it actually mean to build a code ?, how different is it from compiling and running ??? I just hope this blog dosent get too long 💀💀😂'
 coverImage: '/assets/blog/build2.jpg'
 date: '2022-03-29T11:37:01.491Z'
 author:
@@ -14,14 +14,14 @@ ogImage:
 
 Build Systems are tools used to build software code bases, producing final products such as executables, shared objects, libraries etc from the source file. 
 
-Okay lets rewind a bit, in order to understand what a “build system” is, you must first understand how to build a code. what does it actually mean to build a code ?, how diffrent is it from compiling and running ??? I just hope this blog dosent get too long 💀💀😂
+Okay lets rewind a bit, in order to understand what a “build system” is, you must first understand how to build a code. what does it actually mean to build a code ?, how different is it from compiling and running ??? I just hope this blog doesn't get too long 💀💀😂
 
 - Compiling is the act of turning source code into object code, i.e., converting the high level code to machine level code
 - Building describes the overall process which includes compiling and linking, it can also involve other steps such such as pre-processing, converting data files, running automated tests, packaging, etc
 - Running is the process of executing an executable code.
 
 ###### Soooo why do we need build systems ??
-why shouldn't you just stick with building your code with your IDE by hitting F5 or ctrl+F5 as the case maybe, this means the ability to compile your code would be tied to your IDE. Imagine working in a team where everyone uses an operating system of their choice with any IDE (sublime, vscode, etc) even with diffrent version of those IDE's!
+why shouldn't you just stick with building your code with your IDE by hitting F5 or ctrl+F5 as the case maybe, this means the ability to compile your code would be tied to your IDE. Imagine working in a team where everyone uses an operating system of their choice with any IDE (sublime, vscode, etc) even with different version of those IDE's!
 
 okay okay, I know you might still be a bit confused, and think ... but we can just type the command below to build and run codes on the terminal 🤔
 ```markdown
@@ -29,15 +29,15 @@ g++ main.cpp -o main
 ./main
 ```
 
-**Code Organization:** while the command above works perfectly for simple projeects with few lines of code, it generates the intermediary object files and executable program in the current directory, this is generally considered a bad idea. Managing the source code will become problematic when our application gets more complex and requires multiple files.
+**Code Organization:** while the command above works perfectly for simple projects with few lines of code, it generates the intermediary object files and executable program in the current directory, this is generally considered a bad idea. Managing the source code will become problematic when our application gets more complex and requires multiple files.
 
 The lifecycle management of source code and build output files are independent and should be stored in different locations, as build process can be re-created from the source code anytime.
 
-**Optimizing build Process:** most large projects will split down a vast code base into smaller manageable components utilizing several source files, with directories separating files into component subsystems, mind you, interdependencies might also exist between these files. Most build systems will optimise the build process by omitting stages that are already up to date. For C/C++ builds this means omitting the compilation of a source file if neither the source nor any of the files it depends have been changed since the last build.
+**Optimizing build Process:** most large projects will split down a vast code base into smaller manageable components utilizing several source files, with directories separating files into component subsystems, mind you, interdependencies might also exist between these files. Most build systems will optimize the build process by omitting stages that are already up to date. For C/C++ builds this means omitting the compilation of a source file if neither the source nor any of the files it depends have been changed since the last build.
 
-**Complitation options:** lets assume that your team has agreed to use c++17 features, compiling with GNU g++, one can simple type `g++ -std=c++17 -o main.cpp` and another team member using Microsoft cl compiler would have to type `/std:c++17`, build systems helps handle all of this diffrences for you and your team!
+**Complitation options:** lets assume that your team has agreed to use c++17 features, compiling with GNU g++, one can simple type `g++ -std=c++17 -o main.cpp` and another team member using Microsoft cl compiler would have to type `/std:c++17`, build systems helps handle all of this differences for you and your team!
 
-**Managing Testing and Debugging:** a build system is also capable of running automated tests at any point of the build cycle such as unit testing on a per-source code module, integration testing, and functional testing of the various build artefacts generated by the build process.
+**Managing Testing and Debugging:** a build system is also capable of running automated tests at any point of the build cycle such as unit testing on a per-source code module, integration testing, and functional testing of the various build artefact generated by the build process.
 
 **Dependency Management:** This means that the build system detects the target code base's dependencies, downloads them all, and uses the artifacts downloaded during the build process. This is quite useful, especially if a project has a lot of dependencies. 
 
