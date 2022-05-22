@@ -1,6 +1,6 @@
 ---
-title: 'Build systems -CMake'
-excerpt: 'Another thing is CMake allows you to determine the platform you're working on and adjust your actions accordingly. This is accomplished by looking at CMAKE SYSTEM NAME, one of CMake's many internal variables'
+title: 'Build systems - CMake'
+excerpt: 'CMake does not build the project, it generates the files needed by your build tool(make, ninja etc). This means CMake is a build script generator and acts as a generator for other build systems'
 coverImage: '/assets/blog/cmake.png'
 date: '2022-04-10T11:37:01.491Z'
 author:
