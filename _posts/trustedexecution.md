@@ -1,5 +1,5 @@
 ---
-title: 'Trusted Execution Enviroment'
+title: 'Trusted Execution Environment'
 excerpt: 'Together, these attributes provide not only an assurance that the data is kept confidential, but also that the computations performed are actually the correct computations, allowing one to trust the results of the computation as well'
 coverImage: '/assets/blog/tee.jpg'
 date: '2021-12-20T11:37:01.491Z'
@@ -10,13 +10,13 @@ ogImage:
   url: '/assets/blog/tee.jpg'
 ---
 
-#### What is a Trusted Execution Enviroment (TEE) ??? 🔐
+#### What is a Trusted Execution Environment (TEE) ??? 🔐
 
-TEE also called enclave is a secure area inside the main processor, it runs parallel to the operating system in an isolated enviroment. It guarantees that code and dtat loaded in the TEE are protected with respect to confidentiality and integrity. A hardware-based TEE uses hardware-backed techniques to provide increased security guarantees for the execution of code and protection of data within that environment
+TEE also called enclave is a secure area inside the main processor, it runs parallel to the operating system in an isolated environment. It guarantees that code and dtat loaded in the TEE are protected with respect to confidentiality and integrity. A hardware-based TEE uses hardware-backed techniques to provide increased security guarantees for the execution of code and protection of data within that environment
 
 One would ask why TEE'S, why is hardware necessary for confidential computing??, let me quote what i have written down after research 😃
 
-> To provide security though the lowest layers of hardware, with a minimum of dependencies, ie., the list of required trusted parties are reduced therby reducing exposure to potential compromise. 
+> To provide security though the lowest layers of hardware, with a minimum of dependencies, ie., the list of required trusted parties are reduced thereby reducing exposure to potential compromise. 
 — Unknown January 2022 
 
 #### Properties of a TEE
@@ -47,6 +47,6 @@ Together, these attributes provide not only an assurance that the data is kept c
 
 There are currently two leading models of TEEs:
 
-**Process-based TEE's:** current implementations include Intel's SGX (Software Guard eXtensions). Intel SGX is an extention to intel processor that provides record level, secure hardware enabled execution enviroment for program and data to ensure its confidentiality and integrity in both local and remote confidentiality.
+**Process-based TEE's:** current implementations include Intel's SGX (Software Guard eXtensions). Intel SGX is an extension to intel processor that provides record level, secure hardware enabled execution environment for program and data to ensure its confidentiality and integrity in both local and remote confidentiality.
 
 **VM-based TEE's:** current implementations include AMD's SEV (Secure Encrypted Virtualization). SEV is an extension to the AMD-V architecture which supports running virtual machines (VMs) under the control of a hypervisor. When enabled, the memory contents of a VM will be transparently encrypted with a key unique to that VM. 
