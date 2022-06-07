@@ -13,7 +13,7 @@ ogImage:
 > CMake is an open-source, cross-platform family of tools designed to build, test and package software. CMake is used to control the software compilation process using simple platform and compiler independent configuration files, and generate native makefiles and workspaces for your target platform.
 
 
-CMake does not build the project, it generates the files needed by your build tool(make, ninja etc). This means CMake is a build script generator and acts as a generator for other build systems such as Make, Xcode and Ninja. As we saw in the previous blog, writing cross platform makefiles are daunting, cmakes comes to the rescure here. Cmake also handles dependency management. 
+CMake does not build the project, it generates the files needed by your build tool(make, ninja etc). This means CMake is a build script generator and acts as a generator for other build systems such as Make, Xcode and Ninja. As we saw in the previous blog, writing cross platform makefiles are daunting, cmakes comes to the rescue here. Cmake also handles dependency management. 
 
 lets look at a simple example to help understand better, you can quickly download and install cmake from [cmake.org](https://cmake.org/download/)
 

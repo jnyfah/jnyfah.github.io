@@ -14,7 +14,7 @@ To become a proficient C++ programmer, you must have a thorough understanding of
 
 Any type of pointer works on the same principle; it's just a simple variable that stores a memory address. But in as much as they are tremendously powerful, they're also extremely dangerous as a single overlook can devastate your entire app. 🥲🥲 
 
-The issue with pointers is that you are solely responsible for their administration which means every dynamically allocated object requires a manual deallocation and if you forget to do so, you'll have a memory leak. This challenges you to keep track of what you've allotted in your head and call the appropriate operator.🤷🏽‍♂️
+The issue with pointers is that you are solely responsible for their administration which means every dynamically allocated object requires a manual deallocation and if you forget to do so, you'll have a memory leak. This challenges you to keep track of what you've allocated in your head and call the appropriate operator.🤷🏽‍♂️
 
 A simple example of pointers in action:
 

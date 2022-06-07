@@ -36,7 +36,7 @@ int main(){
 
 In the code above we have a c-style string `text`, assigning text to `std::string str` means the string constructor does some heap allocation and copies the characters inside its own memory location (this means we now have two of same string lying around in memory) but with `string_view`, there will be no copying instead it internally references the same buffer of the original string.
 
-Internally, string_view function has a pointer and a size, it sets the pointer to the beginning of the original string and sets its size to the size of the original string, that way it avoids the heap allocation. Any changes made in the original string `text` would reflect in string_view `strV` but would not reflect in the string `str`. 
+Internally, string_view object has a pointer and a size, it sets the pointer to the beginning of the original string and sets its size to the size of the original string, that way it avoids the heap allocation. Any changes made in the original string `text` would reflect in string_view `strV` but would not reflect in the string `str`. 
 
 For example, the code below prints #xample, example and #xample. think about it 🌚🌚
 
