@@ -1,6 +1,6 @@
 ---
 title: 'Build systems -C++ (PART 2)'
-excerpt: 'What happens when a new directory or file is added to the project? Do we have to keep manually editing the build script tho acommodate new stuffs? 🤦'
+excerpt: 'What happens when a new directory or file is added to the project? Do we have to keep manually editing the build script tho accommodate new stuffs? 🤦'
 coverImage: '/assets/blog/build.jpg'
 date: '2022-04-02T11:37:01.491Z'
 author:

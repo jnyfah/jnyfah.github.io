@@ -10,7 +10,7 @@ ogImage:
   url: 'assets/blog/Capture3.JPG'
 ---
 
-## Confidential Computing Consortuim 🕵
+## Confidential Computing Consortium 🕵
 
 -   Who are they ??
 -   What do they do ??

@@ -12,7 +12,7 @@ ogImage:
 
 #### What is a Trusted Execution Environment (TEE) ??? 🔐
 
-TEE also called enclave is a secure area inside the main processor, it runs parallel to the operating system in an isolated environment. It guarantees that code and dtat loaded in the TEE are protected with respect to confidentiality and integrity. A hardware-based TEE uses hardware-backed techniques to provide increased security guarantees for the execution of code and protection of data within that environment
+TEE also called enclave is a secure area inside the main processor, it runs parallel to the operating system in an isolated environment. It guarantees that code and data are loaded in the TEE are protected with respect to confidentiality and integrity. A hardware-based TEE uses hardware-backed techniques to provide increased security guarantees for the execution of code and protection of data within that environment
 
 One would ask why TEE'S, why is hardware necessary for confidential computing??, let me quote what i have written down after research 😃
 
