@@ -79,21 +79,21 @@ $ gcc -E test.cpp
 ```
 running this same command with main.cpp will produce a large input because it contains iostream library
 
-2. Compiling: Here the input is the translation unit from the preprocessor and its output is an assembly code specific to your target architecture
+2. Compiling: Here the input is the translation unit from the preprocessor, which parsed and scanned by the compiler. The compiler also optimized and performance typechecking, its output is an assembly code specific to your target architecture (x86, ARM etc)
 
 To see resulting assembly code, use the command bellow, it dumps the output in a `.s` file in same folder
 ```
 $ gcc -S main.cpp
 ```
 
-3. Assembling: this generates machine code (object file) from the assembly code. Each architecture has its own assembler, which can translate its own assembly code to its own machine code
+3. Assembling: this generates machine code (object file) from the assembly code. Each architecture has its own assembler, which can translate its own assembly code to its own machine code. Note that object code does not know the final memory addresses in which it will be loaded, thats why it is not executable.
 
 ```
 $ gcc -C main.cpp
 ```
 note that preprocessing, compilation, and assembling are done as part of the preceding single command and it generates a `.o` file that unfortunately, we cant open 🤷
 
-4. Linking: we still haven't gotten a product from all the steps above, also we have 2 object files generated from the 2 source files we have. This section combines those object files to form a final program
+4. Linking: we still haven't gotten a product from all the steps above, also we have 2 object files generated from the 2 source files we have. This section combines those object files, selects a final memory location to form a final program
 
 **Okay, okay back to build systems 🤓....**
 
