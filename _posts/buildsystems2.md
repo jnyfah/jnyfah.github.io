@@ -69,6 +69,10 @@ The source code is fed through a pipeline with four unique sections, each of whi
 - Assembler
 - Linker
 
+<p align="center">
+    <img src="/assets/blog/tools.jpg">
+</p>
+
 Let's go in-depth a bit 😌😌
 
 1. Preprocessing: This section simply copies the content of the header files and resolves the preprocessor directives, the output of this section is a translation unit
