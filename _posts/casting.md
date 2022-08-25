@@ -6,8 +6,7 @@ date: '2022-06-17T11:37:01.491Z'
 author:
   name: Jennifer
   picture: '/assets/blog/authors/avatar.jpg'
-ogImage:
-  url: '/assets/blog/casting.jpg'
+ogImage: '/assets/blog/casting.jpg'
 ---
 
 Type casting in C++ is basically the conversion of data from one data type to another, lets say you have a data type double and you want to change it to an int, float or even a string ?? 🤷🏽‍♂️
