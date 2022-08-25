@@ -1,6 +1,6 @@
 ---
 title: 'Systems Programming'
-excerpt: 'The best way to think of "system programming" is the "software that talks to hardware". It is also, typically, "software that software uses, not software that people use.'
+excerpt: 'The best way to think of "system programming" is the software that talks to hardware'
 coverImage: '/assets/blog/systems.jpg'
 date: '2022-08-25T11:37:01.491Z'
 author:
