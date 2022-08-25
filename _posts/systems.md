@@ -6,8 +6,8 @@ date: '2022-08-25T11:37:01.491Z'
 author:
   name: Jennifer
   picture: '/assets/blog/authors/avatar.jpg'
-ogImage:
-  url: '/assets/blog/systems.jpg'
+ogImage: '/assets/blog/systems.jpg'
+
 ---
 For a while now I have found it hard to explain to people what I do, especially to non-programmers. They ask questions like, ohh you are a software engineer right? so do you major in frontend?, backend?? or cloud ?? ... and I am like "nope, I do systems programming" and they'll be like huh ???? 😕😕
 
