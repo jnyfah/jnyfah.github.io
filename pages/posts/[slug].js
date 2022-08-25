@@ -29,7 +29,7 @@ export default function Post({ post, morePosts, preview }) {
                 <title>
                   {post.title} | {BLOG_NAME}
                 </title>
-                <meta property="og:image" content={post.coverImage} />
+                <meta property="og:image" content={post.ogImage} />
               </Head>
               <PostHeader
                 title={post.title}
