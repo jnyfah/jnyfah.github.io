@@ -2,7 +2,7 @@
 title: 'Systems Programming'
 excerpt: 'The best way to think of "system programming" is the software that talks to hardware'
 coverImage: '/assets/blog/systems.jpg'
-date: '2022-08-25T11:37:01.491Z'
+date: '2022-08-24T11:37:01.491Z'
 author:
   name: Jennifer
   picture: '/assets/blog/authors/avatar.jpg'

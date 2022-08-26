@@ -19,7 +19,7 @@ There are two types of type conversion in C++.
    - Explicit Conversion 
 
 __Implicit Conversion__ : is automatically done by the compiler without any trigger from the user. It generally takes place when in an expression more than one data type is present. 
-First of you have to understand that there is something called ranking between type, oh yea all types arent equal 
+First of you have to understand that there is something called ranking between type, oh yea all types aren't equal 
 ```markdown
  long double > double > float > long > int > short > char
 ```
@@ -32,7 +32,7 @@ bool y = x;
 ```
 Automatically the compiler saves `x` as 9 and discards any value after the decimal, demotion has occurs and there was a loss!. There would be no problem if the size of the variable in the left expression can accommodate the value of the expression, although the results may differ from those intended. The value of `y` would be `true` if any real or integer value is assigned to it and false if `0` is assigned.
 
-But promotion doesnt create any problems there is neither a loss or gain for the data, just a change in type.
+But promotion doesn't create any problems there is neither a loss or gain for the data, just a change in type.
 
 __Explicit Conversion__ : the user manually changes data from one type to another, there are 3 main types of explicit conversion:
 
@@ -55,7 +55,7 @@ Note that the C-style casts can change a data type without changing the underlyi
           ```c++
             static_cast<new_type> (expression)
           ```
-    This is my best goto cast operator, performs same implicit cast that C-style cast does, the only difference is that the conversion happens at compile time, which gives you a compile time checking ability, C-style dosent and it is more readable and can be spotted easily 🙂
+    This is my best goto cast operator, performs same implicit cast that C-style cast does, the only difference is that the conversion happens at compile time, which gives you a compile time checking ability, C-style doesn't and it is more readable and can be spotted easily 🙂
       ```c++
       float x = 3.5;
       int y = static_cast<int>(x);
