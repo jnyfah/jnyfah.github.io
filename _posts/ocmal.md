@@ -11,7 +11,7 @@ ogImage: '/assets/blog/ocmal.jpg'
 ---
 
 
-## What is OCaml?
+#### What is OCaml?
 
 > OCaml is a general-purpose, industrial-strength programming language with an emphasis on expressiveness and safety.
 
@@ -116,7 +116,7 @@ Also, here are some other reasons why I think OCaml should be used more:
 See also this [chapter](https://dev.realworldocaml.org/prologue.html#why-ocaml) from the Real World OCaml book.
 
 
-## What is OCaml best for? 
+#### What is OCaml best for? 
 
 1. Writing system software (e.g unix utilities or heck, even [operating systems](https://mirage.io/))
 2. Writing compilers / interpreters (or any software artifact that traverses an abstract syntax tree)
@@ -127,7 +127,7 @@ See also this [chapter](https://dev.realworldocaml.org/prologue.html#why-ocaml) 
 
 OCaml can be used for writing other kinds of software like frontend (yes, there is a JS compiler and a nice framework), backend (yes, there is a nice library), but it is not really common. Hopefully, it would be more common in the future because these kinds of applications can be really nice if written in a functional programming language 💁.
 
-## Why is OCaml not popular?
+#### Why is OCaml not popular?
 Language popularity is a very tricky business. How "well designed" a language is doesn't necessarily scale linearly with respect to popularity (for some definition of "well designed"). A lot of factors go into language popularity, ranging from *good* marketing (e.g Sun Microsystems spent millions of dollars to market Java in the 90s) to *good* developer tooling (e.g Visual Studio in the early 2000s for C#). For OCaml, however, there are several reasons I think it is not as popular as other "mainstream" programming languages:
 * No big tech corp. backing the language
     
@@ -154,7 +154,7 @@ Language popularity is a very tricky business. How "well designed" a language is
 
 
 
-## Pros and Cons of using OCaml
+#### Pros and Cons of using OCaml
 Pros: 
 <!-- can also refer to xavier comment about 50% of C perf  -->
 * Predictable and solid performance 
