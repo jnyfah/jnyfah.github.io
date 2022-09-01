@@ -98,7 +98,7 @@ points:
    Every programming languages needs some shinny features specifically there to deal with modularity or
    abstraction problems. Java has OOP, Generics, etc. Rust has traits, Generics, fancy types, etc. 
    Haskell has type classes and other type level machinery. C++ has a 
-   [turning complete](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.14.3670) template system. 
+   [turing complete](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.14.3670) template system. 
    OCaml has something *equally* as powerful as traits in Rust and type classes in Haskell known as *functors*. 
    Functors are modules that take in modules and return modules (think: functions, but instead of 
    taking expression as arguments, they take in module). A lot of nice abstractions can be created 

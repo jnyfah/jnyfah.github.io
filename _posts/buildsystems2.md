@@ -55,9 +55,7 @@ To build the project and create an executable means that we will compile all the
 
 Yes you read that right 😑 , if they are 1000 source files, we have to compile them one after the other this means that we have to run the compiler 1000 times!. 😫 
 
-<p align="center">
-    <img src="/assets/gifs/6E2.gif">
-</p>
+![Some alt text](/assets/gifs/6E2.gif)
 
 ---
 
@@ -69,9 +67,7 @@ The source code is fed through a pipeline with four unique sections, each of whi
 - Assembler
 - Linker
 
-<p align="center">
-    <img src="/assets/blog/tools.jpg">
-</p>
+![Some alt text](/assets/blog/tools.jpg)
 
 Let's go in-depth a bit 😌😌
 
