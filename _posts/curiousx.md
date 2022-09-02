@@ -66,10 +66,14 @@ ohhh, github link to [CuriousX Project ](https://github.com/jnyfah/CuriousX)
 
 #### Are compilers same as interpreters?
 
-While both programs have the same ultimate goal of translating written code into machine code that a computer can use, the two programs function a bit differently. For example, a compiler can translate an entire program or batch of code at once
-For an interpreter, translating code statements can often take longer. This is because interpreters translate one statement of code at a time, even if a program contains multiple lines or batches. 
+While both programs have the same ultimate goal of translating written code into machine code that a computer can use, the two programs function a bit differently. 
 
-• A compiler translates source code to machine code, but does not execute the source or object code.
-• An interpreter executes source code one instruction at a time, but does not translate the source code
-•  compiler takes quite a long time to translate the source program to native machine code, but subsequent execution is fast
-• An interpreter starts executing the source program immediately, but execution is slow
+For example, a compiler can translate an entire program or batch of code at once
+For an interpreter, translating code statements can often take longer. 
+
+This is because interpreters translate one statement of code at a time, even if a program contains multiple lines or batches. 
+
+- A compiler translates source code to machine code, but does not execute the source or object code.
+- An interpreter executes source code one instruction at a time, but does not translate the source code
+- compiler takes quite a long time to translate the source program to native machine code, but subsequent execution is fast
+- An interpreter starts executing the source program immediately, but execution is slow
