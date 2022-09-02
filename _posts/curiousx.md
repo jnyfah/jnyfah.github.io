@@ -19,7 +19,7 @@ uhhmm, why am I doing this??? Why not ?
 
 Oh well, a compiler is one components in a toolchain of programs used to create executables from source code 
 
-![Some alt text](/assets/blog/tools.jpg)
+![toolchain](/assets/blog/tools.jpg)
 
 To learn more about the toolchain, [check previous post](/_posts/buildsystems2.md).
 
@@ -29,7 +29,7 @@ Compilers exist not only to translate programs, but also to improve them, it als
 
 The compiler also has different stages
 
-![Some alt text](/assets/blog/toolchain.jpg)
+![Compiler](/assets/blog/toolchain.png)
 
 - Scanner: consumes the source file program and groups them together to form tokens
 - Parser: consumes tokens and groups them together to form complete expressions as guided by a grammar and outputs an AST
