@@ -67,7 +67,7 @@ The source code is fed through a pipeline with four unique sections, each of whi
 - Assembler
 - Linker
 
-![Some alt text](/assets/blog/tools.jpg)
+![tool chain](/assets/blog/tools.jpg)
 
 Let's go in-depth a bit 😌😌
 
