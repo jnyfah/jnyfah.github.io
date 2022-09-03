@@ -9,9 +9,9 @@ author:
 ogImage: '/assets/blog/curious.jpg'
 
 ---
-For a few years now, I have had this urge to write a compiler, just for the fun of it or maybe because i am bored who knows ..
+For a few years now, I have had this urge to write a compiler, just for the fun of it or maybe because i am bored who knows 🥲 ..
 
-uhhmm, why am I doing this??? Why not ?
+uhhmm, why am I doing this??? Why not ? 🤷🏽‍♂️
 
 - I love solving challenging problems and learning how things work in-depth.
 - I don’t just want to be a consumer, I also want to contribute!, i love [LLVM](https://llvm.org/) and i want to be an active contributor. 
@@ -36,11 +36,11 @@ The compiler also has different stages
 - Semantic - traverses the AST abd derives semantics, output is an IR
 - Code generator- consumes IR and transforms it to concrete assembly language
 
-And I am going to be building each stage from scratch and obviously blogging about it and its challenges too (pray for me). 
+And I am going to be building each stage from scratch and obviously blogging about it and its challenges too (pray for me 😅). 
 
-I will be using C++ obviously, i plan not to use any 3rd party library, just cmake for easy cross-platform management and google test for writing unit tests, i am also going to target the x86 or ARM architecture or even both, i don't know yet!
+I will be using C++ obviously, i plan not to use any 3rd party library, just cmake for easy cross-platform management and google test for writing unit tests, i am also going to target the x86 or ARM architecture or even both 🤔, i don't know yet!
 
-I would call it `CuriousX` because i am curious to how compilers work!, it would be a very simple compiler, i don't want to complicate things (i am obviously new to this) and its features would include 
+I would call it `CuriousX` because i am curious to how compilers work!, it would be a very simple compiler, i don't want to complicate things (because i am obviously new to this 😬) and its features would include 
 
 1. Print: just like the python print function `print()`
 2. Variables (strings, integer and float)
@@ -54,13 +54,14 @@ For example a program with curiousX would look something like this
 ```C
 x = 2.54 + 3 * 5 - (8 / 3)
 y = #curious#
-if(x == 9){
+if(x == 9)
+{
 print(#testing # x)
 }
 print(# y is # y);
 ```
 
-The `#` sign would be used to specify that this is a string and not a variable, i don't want to use the famous `""` sign, lets be different, in a weird way.
+The `#` sign would be used to specify that this is a string and not a variable, i don't want to use the famous `""` sign, lets be different, in a weird way 😁. 
 
 ohhh, github link to [CuriousX Project ](https://github.com/jnyfah/CuriousX)
 
