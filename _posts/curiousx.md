@@ -78,3 +78,5 @@ This is because interpreters translate one statement of code at a time, even if 
 - An interpreter executes source code one instruction at a time, but does not translate the source code
 - compiler takes quite a long time to translate the source program to native machine code, but subsequent execution is fast
 - An interpreter starts executing the source program immediately, but execution is slow
+
+Read more on [A deeper inspection into compilation and interpretation-](https://medium.com/basecs/a-deeper-inspection-into-compilation-and-interpretation-d98952ebc842)
