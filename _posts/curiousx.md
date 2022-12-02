@@ -82,6 +82,11 @@ This is because interpreters translate one statement of code at a time, even if 
 Read more on [A deeper inspection into compilation and interpretation-](https://medium.com/basecs/a-deeper-inspection-into-compilation-and-interpretation-d98952ebc842)
 
 
-<div class="commentbox"></div>
-<script src="https://unpkg.com/commentbox.io/dist/commentBox.min.js"\></script\>
-<script\>commentBox('5688132691296256-proj')</script\>
+<script
+  src="https://utteranc.es/client.js"
+  repo="github-name/repo-name"
+  issue-term="pathname"
+  theme="github-light"
+  crossorigin="anonymous"
+  async>
+</script>
