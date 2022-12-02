@@ -31,9 +31,9 @@ The compiler also has different stages
 
 ![Compiler](/assets/blog/toolchain.png)
 
-- Scanner: consumes the source file program and groups them together to form tokens
+- Lexer: consumes the source file program and groups them together to form tokens
 - Parser: consumes tokens and groups them together to form complete expressions as guided by a grammar and outputs an AST
-- Semantic - traverses the AST abd derives semantics, output is an IR
+- Semantic - traverses the AST and derives semantics, output is an IR
 - Code generator- consumes IR and transforms it to concrete assembly language
 
 And I am going to be building each stage from scratch and obviously blogging about it and its challenges too (pray for me 😅). 
@@ -80,3 +80,8 @@ This is because interpreters translate one statement of code at a time, even if 
 - An interpreter starts executing the source program immediately, but execution is slow
 
 Read more on [A deeper inspection into compilation and interpretation-](https://medium.com/basecs/a-deeper-inspection-into-compilation-and-interpretation-d98952ebc842)
+
+
+<div class="commentbox"></div>
+<script src="https://unpkg.com/commentbox.io/dist/commentBox.min.js"></script>
+<script>commentBox('5688132691296256-proj')</script>
