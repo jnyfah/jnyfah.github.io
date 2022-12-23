@@ -4,7 +4,7 @@ import { globby } from 'globby'
 import fs from 'fs'
 import matter from 'gray-matter'
 
-const BLOG_URL = 'https://blog-starter.sandypockets.dev'
+const BLOG_URL = 'https://jenniferchukwu.com'
 
 async function generate() {
   const allBlogs = await globby(['_posts/*.md'])

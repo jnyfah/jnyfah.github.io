@@ -40,30 +40,24 @@ And I am going to be building each stage from scratch and obviously blogging abo
 
 I will be using C++ obviously, i plan not to use any 3rd party library, just cmake for easy cross-platform management and google test for writing unit tests, i am also going to target the x86 or ARM architecture or even both 🤔, i don't know yet!
 
-I would call it `CuriousX` because i am curious to how compilers work!, it would be a very simple compiler, i don't want to complicate things (because i am obviously new to this 😬) and its features would include 
+I would call it `CuriousX` because i am curious to how compilers work!, it would be a very simple compiler that handles only expressions , i don't want to complicate things (because i am obviously new to this 😬) and its features would include 
 
 1. Print: just like the python print function `print()`
-2. Variables (strings, integer and float)
-3. if/else statements
+2. Variables assignments (integer and float)
 4. Expressions (add, subtract, divide, and multiply)
 5. Operator precedence
-6.  Operator comparisons : >, <, >=, <=, != and ==
-7.  Statements
+
 
 For example a program with curiousX would look something like this
 ```C
 x = 2.54 + 3 * 5 - (8 / 3)
-y = #curious#
-if(x == 9)
-{
-print(#testing # x)
-}
-print(# y is # y);
+y = x + 11
+z = x + y
+print(z)
 ```
 
-The `#` sign would be used to specify that this is a string and not a variable, i don't want to use the famous `""` sign, lets be different, in a weird way 😁. 
 
-ohhh, github link to [CuriousX Project ](https://github.com/jnyfah/CuriousX)
+ohhh, github link to [CuriousX Project ](https://github.com/jnyfah/CuriousX), instructions on how to build and run the project is well documented 
 
 #### Are compilers same as interpreters?
 
@@ -81,7 +75,3 @@ This is because interpreters translate one statement of code at a time, even if 
 
 Read more on [A deeper inspection into compilation and interpretation-](https://medium.com/basecs/a-deeper-inspection-into-compilation-and-interpretation-d98952ebc842)
 
-
-<div class="commentbox"></div>
-<script src="https://unpkg.com/commentbox.io/dist/commentBox.min.js"></script>
-<script>commentBox('5688132691296256-proj')</script>
