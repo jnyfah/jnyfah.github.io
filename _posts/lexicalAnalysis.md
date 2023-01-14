@@ -66,7 +66,6 @@ print(x)
 The lexer would start by reading the code character by character and grouping them into tokens based on the rules of the lexical grammar. It might identify the following tokens:
 
 ```jsx
-
 [x]    ->   <line:1, col:1>;	 VarToken
 [=]    ->   <line:1, col:3>;	 AssignToken
 [2]    ->   <line:1, col:5>;	 IntToken
@@ -97,8 +96,4 @@ Because the token `';'` is not recognized in our lexical grammar rule, and yes, 
 
 Once the lexical analysis phase is complete, the tokens are passed on to the next compilation phase, the syntax analysis phase.
 
-The syntax analysis phase checks the tokens for correctness and ensures that they are used in a way that follows the rules of the programming language.
-
-In summary, lexical analysis is an important part of the compilation process responsible for breaking down the source code into individual tokens and assigning meaning to these tokens. 
-
-It is a vital step for translating source code into machine code that a computer can execute
+In summary, the lexical analysis stage works like a librarian, sorting through the jumbled mess of letters in our source code and putting them into neat little piles (tokens) so that our compiler can start to understand what we're trying to say. But the journey doesn't end there. 
