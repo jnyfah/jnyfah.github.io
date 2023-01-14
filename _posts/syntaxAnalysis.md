@@ -43,6 +43,10 @@ in a formal notation
 
 where `<expr>` ,`<term>`, `<factor>`, `<addop>` and `<mulop>` are non-terminal symbols, and `+`, `-`, `*`, `/`, `(`, `)`, `<number>` and `<identifier>` are terminal symbols.
 
+- expression is made up of the sum of terms
+- Terms is a product of factors
+- Factor is a number or parenthesized sub expression
+
 The compiler uses these grammar rules to check if the input expression is a valid one and also generates the parse tree of the input expression. It's like solving a crossword puzzle; the lexer breaks the source code into individual pieces (tokens), and the parser puts those pieces back together to form a coherent whole (a parse tree).
 
 A parse tree is a hierarchical representation of the source code, like a family tree, where each node in the tree corresponds to a construct in the language, such as a statement or an expression. 
@@ -54,6 +58,22 @@ For example, consider the following expression in our CuriousX:
 ```c
 x = 5 + 2 * 3
 ```
+To explain this using the formal notation
+`<factor>` = `<expr>`
+
+where 
+
+`<factor>` is x and `<expr>`  =  5 + 2 * 3
+
+then
+
+`<expr>`  =  `<term1>`  +  `<term2>`
+
+where 
+
+`<term1>`  =  `<factor>`  =  5
+
+`<term2>`  =  `<factor>` * `<factor>`  =  2 * 3
 
 The lexer output for this expression as stated in the [previous post](/_posts/lexicalAnalysis.mds) would be:
 
