@@ -264,3 +264,13 @@ Finally, you can commit and create a pull-request, to have you port merged!
 you can check our scenepic's [pull request](https://github.com/microsoft/vcpkg/pull/28661)
 
 If you're a C++ developer, you really can't afford to not have vcpkg in your toolkit. It will save you time and headaches, and make it easier to use the libraries you need. So why wait? Head on over to the vcpkg GitHub page and give it a try!
+
+---
+### Integration
+Vcpkg packages can be integrated with buildsystems like CMake and msbuild or even manually. Learn more here:
+
+[CMake with vcpkg](https://youtu.be/Y7d42_MbhKo)
+
+[msbuild with vcpkg](https://youtu.be/0h1lC3QHLHU)
+
+[Manage code dependencies at work with new vcpkg features](https://youtu.be/3vXOKkv3ND0)
