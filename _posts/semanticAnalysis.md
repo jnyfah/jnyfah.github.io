@@ -65,11 +65,11 @@ The inferred types are then stored in the AST tree and symbol table for later us
 
 Once the semantic analyzer has completed traversing the AST tree and performing type inference, the resulting AST tree is annotated with the inferred types, this means semantic analysis takes in an AST tree from the syntax analyzer as input and its output is an error free AST tree with it types inferred.
 
-Well we are done with the frontend of CuriousX!, Lexical analysis, syntax analysis and semantic analysis are called frontend because they serve as the initial stages of the compilation process. 
+Well we are done with the frontend of CuriousX!, Lexical analysis, syntax analysis and semantic analysis are called frontend because they serve as the initial stages of the compilation process. [code on github](https://github.com/jnyfah/CuriousX/tree/semantic-analysis)
 
 They are the gatekeepers that examine and structure the source code before it is passed on for further processing. The frontend acts like a quality control inspector, checking for errors and making sure that the code is written in a way that can be understood by the compiler. 
 
 Once the frontend has done its job, the real work of compilation can begin. The backend will then take the structured and error-free code and turn it into machine language or bytecode that can be executed by a computer. Without the diligent work of the frontend, the compilation process would be like trying to build a house without a blueprint, it will be chaotic and will not work.
 
-Special shout out to my friends [Ogaga](https://www.linkedin.com/in/oghenevwogaga-ebresafe-0b3a42198) and Tolu for keeping up with my unending questions 😅
+Special shout out to my friends [Ogaga](https://www.linkedin.com/in/oghenevwogaga-ebresafe-0b3a42198) and [Tolu]() for keeping up with my unending questions 😅
 
