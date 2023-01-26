@@ -75,7 +75,7 @@ where
 
 `<term2>`  =  `<factor>` * `<factor>`  =  2 * 3
 
-The lexer output for this expression as stated in the [previous post](/_posts/lexicalAnalysis.mds) would be:
+The lexer output for this expression as stated in the [previous post](/_posts/lexicalAnalysis.md) would be:
 
 ```jsx
 

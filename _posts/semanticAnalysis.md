@@ -65,6 +65,50 @@ The inferred types are then stored in the AST tree and symbol table for later us
 
 Once the semantic analyzer has completed traversing the AST tree and performing type inference, the resulting AST tree is annotated with the inferred types, this means semantic analysis takes in an AST tree from the syntax analyzer as input and its output is an error free AST tree with it types inferred.
 
+For example, consider the following expression in our CuriousX:
+
+```c
+x = 5 + 2 * 3
+```
+
+The lexer output for this expression as stated in the [previous Lexical Analysis post](/_posts/lexicalAnalysis.md) would be:
+
+```jsx
+
+[x]    ->   <line:1, col:1>;	 VarToken
+[=]    ->   <line:1, col:3>;	 AssignToken
+[5]    ->   <line:1, col:5>;	 IntToken
+[+]    ->   <line:1, col:7>;	 PlusToken
+[2]    ->   <line:1, col:9>;	 IntToken
+[*]    ->   <line:1, col:10>;	 MultiplyToken
+[3]    ->   <line:1, col:12>;	 IntToken
+```
+
+A parse tree for this expression also stated in the [previous Syntax Analysis post](/_posts/syntaxAnalysis.md) would have the following structure:
+```
+                         =
+                        / \
+                       x   +
+                          / \
+                         5   *
+                            / \
+                           2   3
+
+```
+
+the output of the semantic analyisis would be an annotated AST that looks like this:
+```
+                         =
+                        / \
+             (INTEGER) x   +
+                          / \
+                         5   *
+                            / \
+                           2   3
+
+```
+it is basically error free AST, where all the variables are infrerred to their types
+
 Well we are done with the frontend of CuriousX!, Lexical analysis, syntax analysis and semantic analysis are called frontend because they serve as the initial stages of the compilation process. [code on github](https://github.com/jnyfah/CuriousX/tree/semantic-analysis)
 
 They are the gatekeepers that examine and structure the source code before it is passed on for further processing. The frontend acts like a quality control inspector, checking for errors and making sure that the code is written in a way that can be understood by the compiler. 
