@@ -1,6 +1,6 @@
 ---
 title: 'Revolutionizing Null-Handling with std::optional'
-excerpt: 'As the semantic analysis traverses the tree, it also checks and adds variables to the symbol table. The symbol table is like a dictionary for your code, it keeps track of all the variables and their types'
+excerpt: 'C++23 features are out already and i am still battling with C++17, and who knows, maybe by the time I have mastered C++17, C++26 will already be here! 😅'
 coverImage: '/assets/blog/optional.jpg'
 date: '2023-01-31T11:37:01.491Z'
 author:
