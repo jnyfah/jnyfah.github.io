@@ -1,13 +1,13 @@
 ---
 title: 'Register Allocation - CuriousX'
 excerpt: 'In the same way, a computer processor is like a chef in a restaurant kitchen, and registers are like the small work area where the processor can keep the data it needs to work with most frequently'
-coverImage: '/assets/blog/vcpkg.jpg'
+coverImage: '/assets/blog/register.jpg'
 date: '2023-03-23T11:37:01.491Z'
 author:
   name: Jennifer
   picture: '/assets/blog/authors/avatar.jpg'
 ogImage:
-  url: '/assets/blog/vcpkg.jpg'
+  url: '/assets/blog/register.jpg'
 ---
 
 I know i have been MIA 😑, yup, been struggling with the code generation part of CuriousX.
