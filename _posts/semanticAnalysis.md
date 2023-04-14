@@ -96,7 +96,7 @@ A parse tree for this expression also stated in the [previous Syntax Analysis po
 
 ```
 
-the output of the semantic analyisis would be an annotated AST that looks like this:
+the output of the semantic analysis would be an annotated AST that looks like this:
 ```
                          =
                         / \
@@ -107,7 +107,7 @@ the output of the semantic analyisis would be an annotated AST that looks like t
                            2   3
 
 ```
-it is basically error free AST, where all the variables are infrerred to their types
+it is basically error free AST, where all the variables are inferred to their types
 
 Well we are done with the frontend of CuriousX!, Lexical analysis, syntax analysis and semantic analysis are called frontend because they serve as the initial stages of the compilation process. [code on github](https://github.com/jnyfah/CuriousX/tree/semantic-analysis)
 
@@ -116,4 +116,3 @@ They are the gatekeepers that examine and structure the source code before it is
 Once the frontend has done its job, the real work of compilation can begin. The backend will then take the structured and error-free code and turn it into machine language or bytecode that can be executed by a computer. Without the diligent work of the frontend, the compilation process would be like trying to build a house without a blueprint, it will be chaotic and will not work.
 
 Special shout out to my friends [Ogaga](https://www.linkedin.com/in/oghenevwogaga-ebresafe-0b3a42198) and [Tolu]() for keeping up with my unending questions 😅
-

@@ -70,7 +70,7 @@ STORE r5       ; Store the result in the variable x
 Well from the name abstract, you already know its not the real assembly 😅
 
 I would say abstract assembly is a type of Intermediate representation 
-so why are we transforming to abstract asembly first why not transform to the real platform dependent assembly code immedaitly like ARM of X86 ??
+so why are we transforming to abstract assembly first why not transform to the real platform dependent assembly code immediately like ARM of X86 ??
 
 Now, you may be wondering why we need IR in the first place. Can't we just generate code directly from the source language? Well, we could, but that would hinder portability and modularity. Suppose we want to build compilers for n source languages and m target machines. If we didn't have IR, we would need a separate compiler for each source language/target machine combination, resulting in n * m compilers. However, if we use IR, we only need n front-ends and m back-ends, making the process much more manageable.
 
@@ -82,7 +82,7 @@ So i guess you understand from the abstract assembly what intermediate registers
 
 The job of the register allocator is to map virtual registers (used in IR code) to physical registers (available in the target machine). The allocator tries to minimize the number of physical registers needed to execute the code, while ensuring that each virtual register is mapped to a physical register that is not already in use.
 
-so the job of the register allocator is to map the virtual registers to the physical registers, i think an example will be better, using the abstract assembly generated earlier lets say out tarhet achitecture only has 2 registers, so how does the register allocator map those 5 vitual registers to the 2 physical registers ??
+so the job of the register allocator is to map the virtual registers to the physical registers, i think an example will be better, using the abstract assembly generated earlier lets say out target architecture only has 2 registers, so how does the register allocator map those 5 virtual registers to the 2 physical registers ??
 
 Assuming that there are only two physical registers P1 and P2 available for our target architecture, the mapping of the abstract assembly to physical registers can be as follows:
 
@@ -97,7 +97,7 @@ STORE P1       ; Store the result in the variable x
 
 This works, we were able to manage 2 physical registers for 5 virtual registers, well thats not always the case, sometimes the physical registers are not enough, so what do we do ?? 
 
-__Register Spiling!__, 
+__Register Spilling!__, 
 
 Register spilling is a technique used by compilers to manage the limited number of physical registers available in a processor. When the number of registers required by a program exceeds the number of available physical registers, some of the registers need to be spilled, i.e., their contents need to be saved to memory, so that they can be reused for other purposes. 
 
