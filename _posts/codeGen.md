@@ -1,8 +1,8 @@
 ---
 title: 'Code Generation- CuriousX'
-excerpt: 'In the same way, a computer processor is like a chef in a restaurant kitchen, and registers are like the small work area where the processor can keep the data it needs to work with most frequently'
+excerpt: 'CuriousX code generator takes an AST as input and outputs ARMv8 assembly code, it traverses the AST in postfix order and generates code for each node in the AST'
 coverImage: '/assets/blog/codegen.jpg'
-date: '2023-04-15T11:37:01.491Z'
+date: '2023-04-14T11:37:01.491Z'
 author:
   name: Jennifer
   picture: '/assets/blog/authors/avatar.jpg'
