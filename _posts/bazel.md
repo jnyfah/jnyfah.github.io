@@ -249,3 +249,4 @@ okay its a wrap!, will i start using Bazel for my project?? lets see how it goes
 
 for more checkout [Bazel for a Complex C++ Build System by Alexander Neben](https://www.alexanderneben.com/2021/10/05/bazel-part-1.html)
 
+[External C++ dependency management in Bazel by Harvey Tuch](https://blog.envoyproxy.io/external-c-dependency-management-in-bazel-dd37477422f5)
