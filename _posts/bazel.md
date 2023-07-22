@@ -40,7 +40,7 @@ the `WORKSPACE` file is a special configuration file used to define the workspac
 It is typically placed at the root of your project's directory structure and named `WORKSPACE` (all uppercase) with no file extension, serves as the entry point for Bazel
 
 WORKSPACE
-```C
+```c
 workspace(name = "my_project")
 ```
 
@@ -106,7 +106,7 @@ The cc_binary target, named `main,` represents an executable binary and includes
 
 The visibility attribute is set to ["//visibility:public"], which means that the "math" library is intended to be visible and accessible to other parts of the project or external projects.
 
-In Bazel, the visibility attribute plays a crucial role in controlling which targets can depend on and access other targets in the build graph. It helps manage the visibility and encapsulation of targets within a project. [More on Bazel visibilities](https://bazel.build/concepts/visibility)
+In Bazel, the visibility attribute plays a crucial role in controlling which targets can depend on and access other targets in the build graph just like Cmake too. It helps manage the visibility and encapsulation of targets within a project. [More on Bazel visibilities](https://bazel.build/concepts/visibility)
 
 Thats basically just it! simple and clear 😅
 
@@ -119,7 +119,6 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 all_content = """filegroup(name = "all", srcs = glob(["**"]), visibility = ["//visibility:public"])"""
 
-# Rule repository, note that it's recommended to use a pinned commit to a released version of the rules
 http_archive(
     name = "rules_foreign_cc",
     sha256 = "2a4d07cd64b0719b39a7c12218a3e507672b82a97b98c6a89d38565894cf7c51",
@@ -127,8 +126,10 @@ http_archive(
     url = "https://github.com/bazelbuild/rules_foreign_cc/archive/refs/tags/0.9.0.tar.gz",
 )
 load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_dependencies")
+
 # This sets up some common toolchains for building targets. For more details, please see
 # https://github.com/bazelbuild/rules_foreign_cc/tree/main/docs#rules_foreign_cc_dependencies
+
 rules_foreign_cc_dependencies()
 _ALL_CONTENT = """\
 filegroup(
@@ -147,13 +148,13 @@ http_archive(
 )
 ```
 
-To incoperate external dependecies with forigen build system in Bazel, you must use the [rules_foreign_cc](https://bazelbuild.github.io/rules_foreign_cc/0.1.0/index.html), from a cmake point of view i would say it is a bit akin to cMake's ExternalProject, It simplifies the process of managing external dependencies and allows seamless use of foreign libraries in Bazel-based C++ projects.
+To incoperate external dependecies with forigen build system in Bazel, you must use the [rules_foreign_cc](https://bazelbuild.github.io/rules_foreign_cc/0.1.0/index.html), from a cmake point of view i would say it is a bit akin to CMake's ExternalProject, It simplifies the process of managing external dependencies and allows seamless use of foreign libraries in Bazel-based C++ projects.
 
 `rules_foreign_cc` is not an inbuilt function like `load`, infact the repository says *not an officially supported Google product*, so to use this, one has to download the repo (i know what you are thinking, calm down 😅, i dont know why too) 
 
 The line `load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")` is used to load the http_archive rule from the `http.bzl` file, which is part of the Bazel tools repository `(@bazel_tools)`. The `http archive` a built-in Bazel rule that allows you to download and extract archives is used to achieve this.
 
-Next the necessary rules for common toolchains used in foreign build system integration is loaded from the line `load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_dependencies")`. 
+Next the necessary rules for common toolchains used in foreign build system integration is loaded from the line `load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_dependencies")`.
 
 These rules provide the magic that makes it easy to incorporate external libraries into our Bazel project.
 
@@ -227,7 +228,7 @@ int main() {
 
 ```
 
-After trying this out, i really wish i could easily integrate Bazel with vcpkg just like cmake does, but unfortunalty 🫠
+After trying this out, i really wish i could easily integrate Bazel with vcpkg just like cmake does, but unfortunalty 🫠, currently to me integrating C++ external libraries with foreign build systems in Bazel is a hassel 🥲
 
 ---
 __Features I absolutely love about Bazel__ ❤️
@@ -244,4 +245,7 @@ __Features I absolutely love about Bazel__ ❤️
     Bazel's remote caching and execution are like having a supercharged build engine. It caches build outputs, avoiding redundant work and accelerating build times. With remote execution, tasks are distributed across a network, slashing build times for large C++ projects. I can iterate faster and stay in the flow, thanks to Bazel's speed and efficiency.
 
 
-okay its a wrap!, i hope to write a more indept Bazel blog soon 😁
+okay its a wrap!, will i start using Bazel for my project?? lets see how it goes ..i hope to write a more indept Bazel blog soon 😁
+
+for more checkout [Bazel for a Complex C++ Build System by Alexander Neben](https://www.alexanderneben.com/2021/10/05/bazel-part-1.html)
+
