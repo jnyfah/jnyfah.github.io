@@ -1,5 +1,5 @@
 ---
-title: 'Build systems -C++ (PART 1)'
+title: 'Intrusive Pointers'
 excerpt: 'But how does it keep track of how many shared_ptr are owning the object and all that ??, with the help of a control block of course!'
 coverImage: '/assets/blog/intrusiveptr.jpg'
 date: '2023-11-29T11:37:01.491Z'
