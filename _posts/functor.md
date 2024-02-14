@@ -1,6 +1,6 @@
 ---
 title: 'Function Objects (Functors)'
-excerpt: 'Just like data pointers point to data, function pointers point to the addresses of functions. '
+excerpt: 'Functors are basically instances of classes that implement the operator() method '
 coverImage: '/assets/blog/functor.jpg'
 date: '2024-02-13T11:37:01.491Z'
 author:
