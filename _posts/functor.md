@@ -10,7 +10,7 @@ ogImage:
   url: '/assets/blog/functor.jpg'
 ---
 
-its crazy how i strugguled to grasp what funtors are in my early days of learning C++, funtion objects, functors, lambda all sounded soo difficult to me 
+its crazy how i struggled to grasp what funtors are in my early days of learning C++, funtion objects, functors, lambda all sounded soo difficult to me 
 
 its literally just a simple one line concept 😭😭😭
 
@@ -65,9 +65,9 @@ See this code looks more readable and maintainable
 
 Yea i know you would say but we can literally do this with function pointers, so want the point !!. well there is a catch ! 😏😏
 
-Lets use a better example, say we want to keep count of how many comaprisons our sort algorithm makes just to sort the vector 
+Lets use a better example, say we want to keep count of how many comparisons our sort algorithm makes just to sort the vector 
 
-with Function Onjects, we can do this:
+with Function Objects, we can do this:
 
 ```c++
 struct CountingComparator {

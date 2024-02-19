@@ -10,7 +10,7 @@ ogImage:
   url: '/assets/blog/intrusiveptr.jpg'
 ---
 
-> Basically, an Intrusive pointer is a type of smart pointer(not in C++ standard), that offers a distinct approach to managing the lifetime of dynamically allocated objects. While they share the basic concept of reference counting with shared pointers, its implementation is slightly diffrent.
+> Basically, an Intrusive pointer is a type of smart pointer(not in C++ standard), that offers a distinct approach to managing the lifetime of dynamically allocated objects. While they share the basic concept of reference counting with shared pointers, its implementation is slightly different.
 
 The fundamental difference between intrusive pointers and shared pointers lies in the location and management of the reference count. With shared pointers, the reference counting is external, handled by a separate control block. While, intrusive pointers integrate this reference counting mechanism directly within the object itself.
 
@@ -33,7 +33,7 @@ This means, when a new shared_ptr is created from another or assigned to another
 
 The object is deleted once the reference count reaches zero, ensuring safe and automatic memory management.
 
-With Intrusive pointers its a bit diffrent, Intrusive pointers embed the reference counting mechanism within the object they manage. This means:
+With Intrusive pointers its a bit different, Intrusive pointers embed the reference counting mechanism within the object they manage. This means:
 - Inherent Reference Counting: Each object must inherently possess the ability to keep track of how many pointers are referencing it. This often requires modifying the object's class to include reference counting logic.
 - Direct Management: The object itself is responsible for incrementing and decrementing its reference count as intrusive pointers are created or destroyed.
 - Self-Deletion: The object knows when to delete itself, which occurs when its internal reference count drops to zero.
