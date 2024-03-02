@@ -1,6 +1,6 @@
 ---
 title: 'std::function'
-excerpt: 'Think of lambdas as a shorthand for writing a functor without needing to define a struct or class'
+excerpt: 'std::function is to Function Pointers, what smart pointers is to raw pointers'
 coverImage: '/assets/blog/stdfunction.jpg'
 date: '2024-02-28T11:37:01.491Z'
 author:
