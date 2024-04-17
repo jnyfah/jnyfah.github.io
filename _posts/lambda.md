@@ -80,7 +80,7 @@ The capture list controls how the lambda can access variables from its surroundi
 
 Lambdas are handy for short, one-off functions, especially when using algorithms that expect function objects or when you need a quick callback. They keep your code concise and readable by keeping the logic right where it's used, avoiding the need to jump around the codebase to understand what's happening.
 
-_*okay i know you might be wondering, when do i use function pointers, functors and when do i use Lambdas ??*_
+_*okay I know you might be wondering, when do I use function pointers, functors and when do I use Lambdas ??*_
 
 ###### My guidelines for choosing
 1. For simple, stateless calls where performance is critical, and the function will not change, a function pointer might be appropriate.

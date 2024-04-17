@@ -1,6 +1,6 @@
 ---
 title: 'Bits to Bytes: Building Computer Memory from Scratch (Part 1)'
-excerpt: 'i am really curious about how computers are able to remember things'
+excerpt: 'I am really curious about how computers are able to remember things'
 coverImage: '/assets/blog/intro.jpg'
 date: '2024-03-07T11:37:01.491Z'
 author:
@@ -10,15 +10,15 @@ ogImage:
   url: '/assets/blog/intro.jpg'
 ---
 
-So i have been reading this book Code: The Hidden Language of Computer Hardware and Software" by Charles Petzold. 
+So I have been reading this book Code: The Hidden Language of Computer Hardware and Software" by Charles Petzold. 
 
-Quite a popular book that provides a comprehensive overview of how computers work at the most fundamental level, and i thought why not implement the principles of computer memory detailed there, how hard can it be 😂 and heck its gonna be a good learning experience.
+Quite a popular book that provides a comprehensive overview of how computers work at the most fundamental level, and I thought why not implement the principles of computer memory detailed there, how hard can it be 😂 and heck its going to be a good learning experience.
 
-_*i am really curious about how computers are able to remember things*_ 🤷🏻‍♀️
+_*I am really curious about how computers are able to remember things*_ 🤷🏻‍♀️
 
-When i say implement i mean practically building the circuits from logic gate to latches flipflops etc . why would anyone want to do this ?? I don't know to be honest, but lets try I am sure it would be worth it (i hope so 😅).
+When I say implement I mean practically building the circuits from logic gate to latches flipflops etc . why would anyone want to do this ?? I don't know to be honest, but lets try I am sure it would be worth it (I hope so 😅).
 
-So technically you need to have a basic knowledge to how resistors, diodes, transistors etc work and if you don't thats totally fine, i would give contexts and links for you to learn more if there is need to.
+So technically you need to have a basic knowledge to how resistors, diodes, transistors etc work and if you don't that's totally fine, I would give contexts and links for you to learn more if there is need to.
 
 Let me give you a quick intro to the star of the show 
 
@@ -39,7 +39,7 @@ image from: [builtin blog](https://builtin.com/hardware/transistor)
 
 For the rest of this series we would be using BJT's mostly NPN, and a pinch of PNP is need be.
 
-To read in-depth of Transistor i would recommend :
+To read in-depth of Transistor I would recommend :
 
 - [Understanding NPN vs PNP Transistors: A Comprehensive Guide](https://www.wevolver.com/article/npn-vs-pnp-bjt-transistor-understanding-the-basics)
 - [Transistors - NPN and PNP - Basic Introduction](https://youtu.be/AcxDiesy-nI?si=cgQ0H8N4po9ON5gX)

@@ -62,7 +62,7 @@ Yes you read that right 😑 , if they are 1000 source files, we have to compile
 Now let's see what goes on behind the scenes
 
 The source code is fed through a pipeline with four unique sections, each of which performs a specific task. Each section in this pipeline takes a specific input from the one before it and creates a specific output for the section after it. This procedure continues along the pipeline until the last section generates a product. These sections are as follows:
-- Preprocessor
+- Pre-processor
 - Compiler
 - Assembler
 - Linker
@@ -71,7 +71,7 @@ The source code is fed through a pipeline with four unique sections, each of whi
 
 Let's go in-depth a bit 😌😌
 
-1. Preprocessing: This section simply copies the content of the header files and resolves the preprocessor directives, the output of this section is a translation unit
+1. Pre-processing: This section simply copies the content of the header files and resolves the pre-processor directives, the output of this section is a translation unit
 
 To see the translation unit of your code, use this command :
 ```
@@ -79,7 +79,7 @@ $ gcc -E test.cpp
 ```
 running this same command with main.cpp will produce a large input because it contains iostream library
 
-2. Compiling: Here the input is the translation unit from the preprocessor, which parsed and scanned by the compiler. The compiler also optimized and performance typechecking, its output is an assembly code specific to your target architecture (x86, ARM etc)
+2. Compiling: Here the input is the translation unit from the pre-processor, which parsed and scanned by the compiler. The compiler also optimized and performance type checking, its output is an assembly code specific to your target architecture (x86, ARM etc)
 
 To see resulting assembly code, use the command bellow, it dumps the output in a `.s` file in same folder
 ```
@@ -115,7 +115,7 @@ but then this commands can grow as the number of source files grows. you can act
 
 ---
 
-Let's try Makefiles, I am going to try to write a makefile for this, please don't judge i am not good with make, so here goes nothing 🙈
+Let's try Makefiles, I am going to try to write a makefile for this, please don't judge I am not good with make, so here goes nothing 🙈
 
 
 ```
@@ -132,7 +132,7 @@ clean:
     rm *.o build
 ``` 
 
-Trust me, if you are as lazy as I am, you definitely don't wanna write makefiles ! 🏃🏾‍♂️😂
+Trust me, if you are as lazy as I am, you definitely don't want to write makefiles ! 🏃🏾‍♂️😂
 
 So how is this different from the shell script file we wrote before  🤔, well unlike shell files makefiles include a lot of control flow mechanisms (loops, conditions, and so on), we can declare a variable in a Makefile and use it in various places, make files can also check for recent modifications in a file, if there are none it skips the build and trust me, you can not get this features in shell scripts 
 

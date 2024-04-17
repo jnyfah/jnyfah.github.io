@@ -1,6 +1,6 @@
 ---
 title: 'Bazel from the Eyes of a Cpp dev'
-excerpt: 'After trying this out, i really wish i could easily integrate Bazel with vcpkg just like cmake does, but unfortunalty 🫠'
+excerpt: 'After trying this out, I really wish I could easily integrate Bazel with vcpkg just like cmake does, but unfortunately 🫠'
 coverImage: '/assets/blog/bazel.jpg'
 date: '2023-07-22T11:37:01.491Z'
 author:
@@ -14,15 +14,15 @@ ogImage:
 
 To be honest, I have always been a fan of CMake 😂. I don't think I have ever used any other build tools for C++ except CMake. By the way, I recently wrote a blog about it. [Feel free to check it out!](_posts/cmake.md) 
 
-sooo, we are changing that today!😏, for the past few weeks i have been trying out Bazel (a friend introduced me to it) and honestly its not bad atall, really impressive IMO.
+sooo, we are changing that today!😏, for the past few weeks I have been trying out Bazel (a friend introduced me to it) and honestly its not bad atall, really impressive IMO.
  
-So yea coming from a cmake fan i would be giving you a beginner friendly intro to Bazel, will tell you what you should look out for, why i love it or why i dont ??? lets see ! 
+So yea coming from a cmake fan I would be giving you a beginner friendly intro to Bazel, will tell you what you should look out for, why I love it or why I dont ??? lets see ! 
 
 >Bazel is an open-source build and test tool made by Google similar to Make, Maven, and Gradle. It uses a human-readable, high-level build language. Bazel supports projects in multiple languages and builds outputs for multiple platforms. 
 
 Okay lets get into it! 🫵🏽
 
-first you have to install Bazel for both linux and windows, i would recommend downloading the bazel binary method, but hey, your choice!, [check out installation methods and instructions here](https://bazel.build/install)
+first you have to install Bazel for both linux and windows, I would recommend downloading the bazel binary method, but hey, your choice!, [check out installation methods and instructions here](https://bazel.build/install)
 
 The first example is a simple C++ program with the following file structure
 
@@ -36,7 +36,7 @@ my_project/
         └── math.cc
 
 ```
-the `WORKSPACE` file is a special configuration file used to define the workspace and external dependencies for your project (more on external dependecies leta). 
+the `WORKSPACE` file is a special configuration file used to define the workspace and external dependencies for your project (more on external dependencies later). 
 It is typically placed at the root of your project's directory structure and named `WORKSPACE` (all uppercase) with no file extension, serves as the entry point for Bazel
 
 WORKSPACE
@@ -108,9 +108,9 @@ The visibility attribute is set to ["//visibility:public"], which means that the
 
 In Bazel, the visibility attribute plays a crucial role in controlling which targets can depend on and access other targets in the build graph just like Cmake too. It helps manage the visibility and encapsulation of targets within a project. [More on Bazel visibilities](https://bazel.build/concepts/visibility)
 
-Thats basically just it! simple and clear 😅
+That's basically just it! simple and clear 😅
 
-Alright lets try another example but this time with external dependecies with same file structure, first we will be modifying the `WORKSPACE` file 
+Alright lets try another example but this time with external dependencies with same file structure, first we will be modifying the `WORKSPACE` file 
 
 ```c
 workspace(name = "my_project")
@@ -148,9 +148,9 @@ http_archive(
 )
 ```
 
-To incoperate external dependecies with forigen build system in Bazel, you must use the [rules_foreign_cc](https://bazelbuild.github.io/rules_foreign_cc/0.1.0/index.html), from a cmake point of view i would say it is a bit akin to CMake's ExternalProject, It simplifies the process of managing external dependencies and allows seamless use of foreign libraries in Bazel-based C++ projects.
+To incorporate external dependencies with foreign build system in Bazel, you must use the [rules_foreign_cc](https://bazelbuild.github.io/rules_foreign_cc/0.1.0/index.html), from a cmake point of view I would say it is a bit akin to CMake's ExternalProject, It simplifies the process of managing external dependencies and allows seamless use of foreign libraries in Bazel-based C++ projects.
 
-`rules_foreign_cc` is not an inbuilt function like `load`, infact the repository says *not an officially supported Google product*, so to use this, one has to download the repo (i know what you are thinking, calm down 😅, i dont know why too) 
+`rules_foreign_cc` is not an inbuilt function like `load`, infact the repository says *not an officially supported Google product*, so to use this, one has to download the repo (I know what you are thinking, calm down 😅, I dont know why too) 
 
 The line `load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")` is used to load the http_archive rule from the `http.bzl` file, which is part of the Bazel tools repository `(@bazel_tools)`. The `http archive` a built-in Bazel rule that allows you to download and extract archives is used to achieve this.
 
@@ -214,7 +214,7 @@ cc_binary(
 
 `cmake(...)` This block defines the CMake rule to configure and build the "fmt" library. The parameters inside the cmake(...) block specify various settings and options for building the library
 
-Lastly we incoprate fmt into our cpp file 🙂
+Lastly we incorporate fmt into our cpp file 🙂
 
 ```c++
 #include "math/math.h"
@@ -228,7 +228,7 @@ int main() {
 
 ```
 
-After trying this out, i really wish i could easily integrate Bazel with vcpkg just like cmake does, but unfortunalty 🫠, currently to me integrating C++ external libraries with foreign build systems in Bazel is a hassel 🥲
+After trying this out, I really wish I could easily integrate Bazel with vcpkg just like cmake does, but unfortunately 🫠, currently to me integrating C++ external libraries with foreign build systems in Bazel is a hassel 🥲
 
 ---
 __Features I absolutely love about Bazel__ ❤️
@@ -245,7 +245,7 @@ __Features I absolutely love about Bazel__ ❤️
     Bazel's remote caching and execution are like having a supercharged build engine. It caches build outputs, avoiding redundant work and accelerating build times. With remote execution, tasks are distributed across a network, slashing build times for large C++ projects. I can iterate faster and stay in the flow, thanks to Bazel's speed and efficiency.
 
 
-okay its a wrap!, will i start using Bazel for my project?? lets see how it goes ..i hope to write a more indept Bazel blog soon 😁
+okay its a wrap!, will I start using Bazel for my project?? lets see how it goes ..I hope to write a more indept Bazel blog soon 😁
 
 for more checkout [Bazel for a Complex C++ Build System by Alexander Neben](https://www.alexanderneben.com/2021/10/05/bazel-part-1.html)
 
