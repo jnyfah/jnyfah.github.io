@@ -1,6 +1,6 @@
 ---
 title: 'decltype and declval'
-excerpt: 'In simple terms, std::declval can't be used on its own! 😆'
+excerpt: 'In simple terms, std::declval cant be used on its own! 😆'
 coverImage: '/assets/blog/decltype.jpeg'
 date: '2024-08-24T11:37:01.491Z'
 author:
