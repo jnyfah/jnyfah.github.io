@@ -46,7 +46,7 @@
     "@mdx-js/loader": "^3.0.1",
     "@storybook/addon-actions": "^8.0.4",
     "@storybook/addon-essentials": "^8.0.4",
-    "@storybook/addon-interactions": "^8.0.4",
+    "@storybook/addon-interactions": "^8.1.11",
     "@storybook/addon-links": "^8.0.4",
     "@storybook/addon-onboarding": "^8.0.4",
     "@storybook/blocks": "^8.0.4",
