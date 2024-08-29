@@ -64,6 +64,6 @@
     "prettier": "^3.2.5",
     "rss": "^1.2.2",
     "storybook": "^8.0.4",
-    "tailwindcss": "^3.4.1"
+    "tailwindcss": "^3.4.10"
   }
 }
