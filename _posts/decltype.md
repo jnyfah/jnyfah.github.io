@@ -9,8 +9,6 @@ author:
 ogImage:
   url: '/assets/blog/decltype.jpeg'
 ---
-[*image: Nike store Lekki, Lagos*]
-
 
 ---
 

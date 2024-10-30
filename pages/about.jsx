@@ -18,7 +18,7 @@ export default function About() {
       backgroundColor: 'rgba(50, 50, 50, 0.5)'
     }}>
           <br/>
-          <p>&nbsp; &#128188; SWE @ Microsoft</p>
+          <p>&nbsp; &#128188; SWE @ Home</p>
           <br/>
           <p>&nbsp; &#127760; Jupiter</p>
           <br/>
