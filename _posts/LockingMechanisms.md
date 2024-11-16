@@ -1,6 +1,6 @@
 ---
 title: 'C++ Locking Mechanisms'
-excerpt: 'Its multithreading monday 🚀!'
+excerpt: 'So make it safer and easier, C++ provides several RAII-style locking mechanisms'
 coverImage: '/assets/blog/road.jpeg'
 date: '2024-11-13T11:37:01.491Z'
 author:
