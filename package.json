@@ -59,7 +59,7 @@
     "eslint": "^8.57.0",
     "eslint-config-next": "15.0.2",
     "eslint-plugin-storybook": "^0.10.1",
-    "globby": "^14.0.2",
+    "globby": "^14.1.0",
     "postcss": "^8.4.38",
     "prettier": "^3.3.3",
     "rss": "^1.2.2",
