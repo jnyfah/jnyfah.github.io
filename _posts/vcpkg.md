@@ -178,7 +178,7 @@ PS D:\src\vcpkg\buildtrees\scenepic\src\v1.0.16-6e9f877aa2.clean> git diff --ign
 ```
 The output will be a `fix_dependencies.patch` file located in your package port folder. This is what the patch file looks like 
 
-```patch
+```powershell
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index a2db3db..a10a942 100644
 --- a/CMakeLists.txt
