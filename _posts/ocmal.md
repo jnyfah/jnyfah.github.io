@@ -49,7 +49,7 @@ In C++ we could have:
     }
 ```
 In a functional language like OCaml, we would have:
-```ml
+```ocaml
     type node = Data of int * node | Empty
     let rec length node = 
         match node with 

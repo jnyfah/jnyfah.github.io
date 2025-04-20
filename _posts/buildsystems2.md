@@ -20,7 +20,7 @@ We know that all cpp code bases or projects have source files (.cpp) and header 
 
 1. **A header file - test.hpp**
 The file contains only one function `addNumber` declaration and is also protected by the header guard statements as this prevent the header file from being included twice or more while being compiled
-```c++
+```cpp
 #ifndef TEST_HPP
 #define TEST_HPP
 
@@ -31,7 +31,7 @@ The file contains only one function `addNumber` declaration and is also protecte
 
 2. **A Source file - test.cpp**
 This file contains the header file and the definition of the function, the function simple returns the sum of two numbers passed in as variables
-```c++
+```cpp
 #include "test.hpp"
 
 int addNumbers(int num1, int num2){
@@ -41,7 +41,7 @@ int addNumbers(int num1, int num2){
 
 3. **Another Source file - main.cpp**
 The main function is the entry point of the program, the main function calls the addNumber functions with arguments
-```c++
+```cpp
 #include <iostream>
 #include "test.hpp"
 

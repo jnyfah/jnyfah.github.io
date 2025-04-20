@@ -21,7 +21,7 @@ _Think of lambdas as a shorthand for writing a functor without needing to define
 
 A lambda expression looks like this:
 
-```py
+```cpp
 
 [ /* capture list */ ]( /* parameters */ ) -> /* return type */ {
     // function body
@@ -35,7 +35,7 @@ A lambda expression looks like this:
 
 From the previous post with functors we can have a custom sort like this:
 
-```c++
+```cpp
 struct DescendingOrder {
     bool operator()(int a, int b) {
         return a > b;
@@ -48,7 +48,7 @@ std::sort(myVector.begin(), myVector.end(), DescendingOrder());
 
 Now, let's use a lambda to do the same thing more concisely:
 
-```c++
+```cpp
 std::vector<int> myVector = {4, 1, 3, 5, 2};
 std::sort(myVector.begin(), myVector.end(), [](int a, int b) {
     return a > b;

@@ -22,7 +22,7 @@ With type traits, you can write code that adapts to different types, and perform
 
 Here's a simple example. Let's say you want to write a function that takes a pointer to an object and returns the value of that object. You might write something like this:
 
-```c++
+```cpp
 template <typename T>
 T getValueFromPointer(T* ptr)
 {
@@ -36,7 +36,7 @@ But what if someone passes in a reference instead of a pointer? The function wil
 
 To avoid this problem, you can use a type trait to make sure that the argument is actually a pointer:
 
-```c++
+```cpp
 template <typename T>
 T getValueFromPointer(T* ptr)
 {
@@ -48,7 +48,7 @@ Now, if someone tries to pass in a reference, the program will fail to compile, 
 
 Another simple example, you might want to write a template function that can work with any arithmetic type. You can use type traits to check whether the type of the argument is an arithmetic type or not, and perform different actions accordingly. Here's an example:
 
-```c++
+```cpp
 #include <iostream>
 #include <type_traits>
 

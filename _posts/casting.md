@@ -26,7 +26,7 @@ First of you have to understand that there is something called ranking between t
 this means during conversion either a demotion or a promotion takes place, note that during demotion data loss takes place 
 
 for instance
-```c++
+```cpp
 int x = 9.75;
 bool y = x;
 ```
@@ -37,7 +37,7 @@ But promotion doesn't create any problems there is neither a loss or gain for th
 __Explicit Conversion__ : the user manually changes data from one type to another, there are 3 main types of explicit conversion:
 
   - C-style type casting - here the required type is explicitly specified before the parenthesis in this type of conversion, and just like implicit conversion it causes data loss
-```c++
+```cpp
 // initializing int variable
 int num_int = 26;
 
@@ -52,23 +52,23 @@ Note that the C-style casts can change a data type without changing the underlyi
   - Cast operators: C++ also has four type cast operator
 
     1. __Static Cast:__ 
-          ```c++
+          ```cpp
             static_cast<new_type> (expression)
           ```
     This is my best goto cast operator, performs same implicit cast that C-style cast does, the only difference is that the conversion happens at compile time, which gives you a compile time checking ability, C-style doesn't and it is more readable and can be spotted easily 🙂
-      ```c++
+      ```cpp
       float x = 3.5;
       int y = static_cast<int>(x);
       ```
 
     2. __Dynamic Cast:__ 
-          ```c++
+          ```cpp
             dynamic_cast<new_type> (expression)
           ```
     Basically, dynamic cast is used for casting along the class inheritance hierarchy in C++, this just means casting an object from based class type to derived type and vice versa. 
     
     News flash this can also be done with C-style casting but the difference is, downcasting from a base class to derived class, may fail if pointer is not actually of derived type, this means the cast is invalid, dynamic cast checks that the object being cast is actually of the derived class type and returns a null pointer if the object is not of the desired type (unless you're casting to a reference type -- then it throws a bad_cast exception) but other casts or C-style cast wont.
-      ```c++
+      ```cpp
       class MyBase { public: virtual void test() {} };
       class MyDerived : public MyBase {};
  
@@ -83,24 +83,24 @@ Note that the C-style casts can change a data type without changing the underlyi
     Also note that dynamic_cast only works with polymorphic class types and is evaluated at run time which makes it slower than static_cast.
 
     3. __Reinterpret Cast :__
-          ```c++
+          ```cpp
             reinterpret<new_type> (expression)
           ```
       Used to convert a pointer of some data type into a pointer of another datatype, I would say to do unsafe conversions of pointer types to and from integer and other pointer types. Use this only if we know what we are doing and we understand the aliasing issues (i have never tried to use it before 😬)
-       ```c++
+       ```cpp
       int *ptr = new int (20)
       char *ch = reinterpret_cast<char*>(ptr)
       ```
       You can notice that it does not check if the pointer type and data pointed by the pointer is same or not
 
     4. __Const Cast :__
-          ```c++
+          ```cpp
             const_cast<new_type> (expression)
           ```
       This cast style is primarily used to add or remove the const modifier of a variable. Although const cast allows the value of a constant to be changed, doing so is still invalid code that may cause a run-time error. 
       
       This could occur for example if the constant was located in a section of read-only memory.
-      ```c++
+      ```cpp
       const int myConst = 5;
       int *nonConst = const_cast<int*>(&myConst);
       ```

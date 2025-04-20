@@ -24,7 +24,7 @@ This allows objects of such classes to be used as if they were functions and can
 
 Imagine wanting a function that remembers how many times it's been called. Here's how a functor makes it a breeze:
 
-```c++
+```cpp
 class Counter {
 public:
     Counter() : count(0) {}
@@ -38,7 +38,7 @@ private:
 };
 ```
 Creating and using our Counter looks like this:
-```c++
+```cpp
 Counter myCounter;
 std::cout << myCounter() << std::endl;  // Increments and outputs: 1
 std::cout << myCounter() << std::endl;  // Increments and outputs: 2
@@ -51,7 +51,7 @@ The real power of functors unfolds with the Standard Template Library (STL). Her
 
 Custom sorting, for example, becomes intuitive:
 
-```c++
+```cpp
 struct DescendingOrder {
     bool operator()(int a, int b) {
         return a > b;
@@ -69,7 +69,7 @@ Lets use a better example, say we want to keep count of how many comparisons our
 
 with Function Objects, we can do this:
 
-```c++
+```cpp
 struct CountingComparator {
     long long count = 0; // State to keep track of comparisons
 
@@ -92,7 +92,7 @@ Here we can see the functor's ability to maintain state in this case, the count 
 ---
 Now doing same to do same with `Function Pointers` we need to use global or static variables to track the state (the count of comparisons), as function pointers themselves cannot maintain state
 
-```c++
+```cpp
 long long globalComparisonCount = 0;
 
 bool compareAndCount(int a, int b) {

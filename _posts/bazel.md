@@ -50,7 +50,7 @@ These BUILD files are configuration files that define how your software componen
 
 --- 
 math/math.h:
-```c++
+```cpp
 #ifndef MATH_H
 #define MATH_H
 
@@ -59,7 +59,7 @@ int add(int a, int b);
 #endif  // MATH_H```
 
 main.cc:
-```c++
+```cpp
 #include <iostream>
 #include "math/math.h"
 
@@ -71,7 +71,7 @@ int main() {
 ```
 
 math/math.cc:
-```c++
+```cpp
 #include "math/math.h"
 
 int add(int a, int b) {
@@ -216,7 +216,7 @@ cc_binary(
 
 Lastly we incorporate fmt into our cpp file 🙂
 
-```c++
+```cpp
 #include "math/math.h"
 #include <fmt/core.h> // Include the fmt library
 

@@ -163,7 +163,7 @@ Well, with all this our file will still fail, why ??? because our scenepic's [cm
 
 To solve this we have to create a patch to improve code compatibility since `fetchcontent` is not allowed in vcpkg, to create a patch file using git
 
-```ps
+```powershell
 PS D:\src\vcpkg\buildtrees\scenepic\src\v1.0.16-6e9f877aa2.clean> git init .
 
 PS D:\src\vcpkg\buildtrees\scenepic\src\v1.0.16-6e9f877aa2.clean> git add .
@@ -173,7 +173,7 @@ PS D:\src\vcpkg\buildtrees\scenepic\src\v1.0.16-6e9f877aa2.clean> git commit -m 
 Then we modify the `CMakeLists.txt` file located at `D:\src\vcpkg\buildtrees\scenepic\src\v1.0.16-6e9f877aa2.clean\CMakeLists.txt` by removing the fetchContent codes and replacing it with the `find package` function modifying the way that the Eigen library is being included in the project.
 
 To save the patch
-```PS
+```powershell
 PS D:\src\vcpkg\buildtrees\scenepic\src\v1.0.16-6e9f877aa2.clean> git diff --ignore-space-at-eol | out-file -enc ascii ..\..\..\..\ports\scenepic\fix_dependencies.patch
 ```
 The output will be a `fix_dependencies.patch` file located in your package port folder. This is what the patch file looks like 

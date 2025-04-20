@@ -33,7 +33,7 @@ The std::optional was designed to solve these problems. It's a type that can eit
 
 Take a look at this example 
 
-```c++
+```cpp
 int findIndex(std::vector<int>vec, int num) {
   for (int i = 0; i < vec.size(); i++) {
       return i;
@@ -43,7 +43,7 @@ int findIndex(std::vector<int>vec, int num) {
 ```
 Another way to write this using `std::pair`
 
-```c++
+```cpp
 std::pair<int bool>findIndex(std::vector<int>vec, int num) {
     for (int i = 0; i < vec.size(); i++) {
       return std::pair(i, true);
@@ -67,7 +67,7 @@ So, how does it work? Simply put, std::optional is a template that takes a type 
 
 You can create an std::optional and assign a value to it, just like any other variable. You can also check whether an std::optional has a value or not, and access the value if it's there.
 
-```c++
+```cpp
 #include <iostream>
 #include <optional>
 
@@ -89,7 +89,7 @@ Additionally, std::optional provides a variety of member functions for accessing
 
 -  __operator* and operator->__ allow one to access the contained value directly, just like with a regular object.
 
-```c++
+```cpp
 std::optional opt = 42; 
 if (opt) { 
   int value = *opt; 
@@ -98,14 +98,14 @@ if (opt) {
 ```
 -  __value() and value_or()__ allows the access the contained value with or without a default value.
 
-```c++
+```cpp
 std::optional opt; 
 int value = opt.value_or(0); 
 std::cout << "Value: " << value << std::endl;
 ```
 
 -  __emplace()__  constructs the contained value in-place, reducing the need for separate construction and assignment operations.
-```c++
+```cpp
 std::optionalstd::string opt; 
 opt.emplace("Hello, world!"); 
 std::cout << "Value: " << *opt << std::endl;
@@ -113,13 +113,13 @@ std::cout << "Value: " << *opt << std::endl;
 
 -  __swap() and reset()__ give one access manipulate the state of the std::optional object.
 
-```c++
+```cpp
 std::optional opt = 42; 
 opt.reset(); 
 std::cout << "Has value: " << (bool)opt << std::endl;
 ```
 
-```c++
+```cpp
 std::optional opt1 = 42, 
 opt2 = 21; opt1.swap(opt2); 
 std::cout << "Value 1: " << *opt1 << std::endl; 

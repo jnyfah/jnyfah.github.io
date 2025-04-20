@@ -22,7 +22,7 @@ Applying this logic to string_view, it means string_view is the window, which is
 
 So how does this even differ from string and why should you care ??, lets start with a pretty simple example
 
-```c++
+```cpp
 #include <iostream>
 #include <string>
 #include <string_view>
@@ -41,7 +41,7 @@ Internally, string_view object has a pointer and a size, it sets the pointer to 
 For example, the code below prints #xample, example and #xample. think about it 🌚🌚
 
 
-```c++
+```cpp
 #include <iostream>
 #include <string>
 #include <string_view>
@@ -79,7 +79,7 @@ If __YES__ , then its highly recommended that you use `const std::string& becaus
 
 Is it possible to convert string_view to string and vice versa?? yes certainly ! 😁
 
-```c++
+```cpp
 #include <iostream>
 #include <string>
 #include <string_view>

@@ -29,7 +29,7 @@ According to the lexical grammar, not all tokens are valid, and not all tokens a
 
 As mentioned earlier in the [previous blog post](_posts/curiousx.md), I will be building an expressions only compiler using C++ to keep things simple, this means our lexical analyzer only recognizes tokens associated with mathematical expressions, here is a list of tokens the lexer can recognize 
 
-```c++
+```cpp
 enum class LexerTokenType {
 
     ParenOpen,
@@ -59,7 +59,7 @@ enum class LexerTokenType {
 
 For example, let's say you have a piece of code that looks like this:
 
-```c++
+```cpp
 x = 2 + (8 * 5)
 print(x)
 ```
@@ -83,7 +83,7 @@ The lexer would start by reading the code character by character and grouping th
 
 As you can see, the lexer is able to break down the code into meaningful tokens that the compiler can understand according to the lexical grammar rules provided, lets say you try to run this code through our lexical analyzer 
 
-```c++
+```cpp
 x = 2 + (8 * 5)
 print(x);
 ```

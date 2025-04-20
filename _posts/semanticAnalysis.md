@@ -22,13 +22,13 @@ An implicitly typed language means that the programmer does not explicitly speci
 
 On the other hand, a strongly typed language means that a variable can only hold data of the type it was declared to hold and an error will be generated if an attempt is made to assign a value of a different type to that variable, like trying to put a square peg in a round hole. For example, in the following code snippet:
 
-```c++
+```cpp
 x = 9.8
 y = x * 2
 ```
 This would result in an error because x is a float and 2 is an integer, and binary operations can't be performed on them, so what type will the variable `y` be intfloat? No, not happening, sorry 😒. To correct this, you would need to do something like this:
 
-```c++
+```cpp
 x = 9.8
 y = x * 2.0
 ```
@@ -43,7 +43,7 @@ so what errors can CuriousX semantic Analyzer catch that the lexer and syntax ca
 -  Undeclared variables: when a variable is used in a program without being first defined or assigned to any value, since CuriousX supports implicit PL, you cant just declare a variable without defining it.
 
 - duplicate variable declaration: In the case of CuriousX, this occurs when a variable is defined more than once to a different type for example:
-```c++
+```cpp
 x = 5
 x = 5.9
 ```

@@ -18,7 +18,7 @@ The issue with pointers is that you are solely responsible for their administrat
 
 A simple example of pointers in action:
 
-```c++
+```cpp
 MyObject* ptr = new MyObject();                                        
 ptr->DoSomething();                      
 delete ptr;                                                            
@@ -36,7 +36,7 @@ The "memory" header of the Standard Library defines three types of smart pointer
 
 __Unique_ptr__ - using unique_ptr means no other smart pointers can point to the item it points to because it is its exclusive property. The object is removed when the std::unique ptr is no longer in scope. 
 
-```c++
+```cpp
 #include <memory>
 #include <iostream>
 using namespace std;
@@ -51,7 +51,7 @@ __Shared_ptr__ - this owns the item it references, but unlike unique ptr, it ena
 
 When you wish to distribute your dynamically allocated data around in the same way that you would with raw pointers or references, this form of smart pointer comes in handy. 
 
-```c++
+```cpp
 #include <iostream>
 #include <memory>
 
@@ -73,7 +73,7 @@ int main() {
 __Weak_ptr__ - is similar to a std::shared ptr, but it does not increase the number of references. Rather than pointing to a resource directly, they point to another pointer (weak or shared). Weak pointers can't access an object directly, but they can tell whether the object still exists or if it has expired. A weak pointer can be temporarily converted to a shared pointer to access the pointed-to object (provided it still exists).
 
 Here is a perfect example i got from educative.io
-```c++
+```cpp
 #include <iostream>
 #include <memory>
 
