@@ -14,10 +14,7 @@ module.exports = {
     '@storybook/addon-interactions',
   ],
   framework: '@storybook/nextjs',
-  docs: {
-    // Your docs configuration
-    autodocs: 'tag',
-  },
+  docs: {},
   staticDirs: ['../public'],
 
   webpackFinal: async (config, { configType }) => {
