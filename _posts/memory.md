@@ -10,7 +10,9 @@ ogImage: '/assets/blog/memory.jpeg'
 ---
 
 
-This post is a note-to-self as we figure out what memory management looks like for [RendererEngine](https://github.com/JeanPhilippeKernel/RendererEngine). It documents what I’ve learned so far — and where we are still unsure.
+This post is a note-to-self as we figure out what memory management looks like for [RendererEngine](https://github.com/JeanPhilippeKernel/RendererEngine). It documents what I’ve learned so far — and where I am still unsure.
+
+---
 
 __*Why Memory Management Matters in Games*__
 
@@ -80,7 +82,17 @@ Cons:
 - Different systems may need different allocators
 - Requires deep understanding of memory usage patterns
 
+__*When to Use What: My Current Mapping*__
 
+| Strategy         | Best Used For                              | How to Use It                                                                 |
+|------------------|---------------------------------------------|-------------------------------------------------------------------------------|
+| **Arena**         | Per-frame temporary data                   | Allocate a large block at init; bump pointer per allocation; reset each frame |
+| **Object Pool**   | Repeated small, fixed-size objects         | Preallocate pool of reusable objects; recycle via free list                   |
+| **Free List**     | Varied-size, dynamic allocations           | Manage a reusable set of free memory blocks; reuse freed memory              |
+| **Custom Allocator** | Specialized subsystems (scripting, audio) | Tailor behavior to specific allocation patterns; use where performance-critical |
+| **Virtual Memory**| Large dynamic systems (e.g., asset streaming) | Reserve large virtual space; commit physical memory on demand                |
+
+---
 __*Current Implementation in RendererEngine*__
 
 Currently, RendererEngine uses a hybrid approach combining arena allocation and pool allocation:
