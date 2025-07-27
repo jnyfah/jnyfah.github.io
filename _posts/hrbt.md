@@ -2,7 +2,7 @@
 title: 'Lambda in Cpp'
 excerpt: 'Think of lambdas as a shorthand for writing a functor without needing to define a struct or class'
 coverImage: '/assets/blog/hrbt.jpeg'
-date: '2011-02-19T11:37:01.491Z'
+date: '2025-07-05T11:37:01.491Z'
 author:
   name: Jennifer
   picture: '/assets/blog/authors/avatar.jpg'
@@ -11,78 +11,99 @@ ogImage:
 ---
 
 
-We have previously looked at [Functors](/posts/functor/) and [Function Pointers](/posts/functionpointer/), next is Lambdas
-> A lambda expression in C++ is a way to define an anonymous function right at the place where it is needed
+To understand quaternions, you first need to understand vectors and matrices, especially matrices because quaternions complement matrices by solving problems that arise when using matrices to represent rotations.
 
-
-_Think of lambdas as a shorthand for writing a functor without needing to define a struct or class._
-
-##### Basic Structure
-
-A lambda expression looks like this:
-
-```cpp
-
-[ /* capture list */ ]( /* parameters */ ) -> /* return type */ {
-    // function body
-}
-```
-
-- __Capture List:__ Specifies which variables from the outside scope you want to use inside the lambda. You can capture by value (copying the value) or by reference.
-- __Parameters:__ Just like function parameters, these are the inputs to your lambda.
-- __Return Type:__ This is optional. Most of the time, the compiler can deduce the return type based on the code inside your lambda.
-- Function Body: The code that gets executed when the lambda is called.
-
-From the previous post with functors we can have a custom sort like this:
-
-```cpp
-struct DescendingOrder {
-    bool operator()(int a, int b) {
-        return a > b;
-    }
-};
-
-std::vector<int> myVector = {1, 5, 3, 4, 2};
-std::sort(myVector.begin(), myVector.end(), DescendingOrder());
-```
-
-Now, let's use a lambda to do the same thing more concisely:
-
-```cpp
-std::vector<int> myVector = {4, 1, 3, 5, 2};
-std::sort(myVector.begin(), myVector.end(), [](int a, int b) {
-    return a > b;
-});
-```
-
-Here, `[](int a, int b) { return a > b; }` is the lambda expression. It's a compact, anonymous function that we pass directly to std::sort
-
-*Breaking Down the Lambda*
-
-[]: This is the capture list. Since we're not using any external variables inside the lambda, it's empty.
-
-(int a, int b): These are parameters, just like in any function. Our lambda takes two integers to compare.
-
-{ return a > b; }: This is the function body. It performs the comparison.
+Don’t get me wrong: matrices are awesome. They work great for most transformations like rotations and translations especially in 2D and 3D scenarios like physics simulations, computer graphics, or games. But when it comes to smooth interpolation and using euler angles matrices has it down sides.
 
 ---
-##### Capture List in Detail
+Okay lets rewind back a bit and run through the basics to understand better
 
-The capture list controls how the lambda can access variables from its surrounding scope:
+A vector like `(2, 3, 4)` represents a point in 3D space as we all know and this basically means the object is 2 units along the X-axis, 3 units along Y, and 4 along Z. 
 
-- [=]: Capture all external variables by value.
-- [&]: Capture all external variables by reference.
-- [x]: Capture variable x by value.
-- [&x]: Capture variable x by reference.
-- [=, &x]: Capture most variables by value, but capture x by reference.
+To rotate the vector, we have to compose rotation matrices for X, Y, and Z into a single matrix by multiplying them in a specific order: Rz * Ry * Rx.
 
-##### Why Use Lambdas?
+![mov](/assets/blog/cube_rotation.gif)
 
-Lambdas are handy for short, one-off functions, especially when using algorithms that expect function objects or when you need a quick callback. They keep your code concise and readable by keeping the logic right where it's used, avoiding the need to jump around the codebase to understand what's happening.
+```js
+     [1     0      0  ]              [cosθ   0   -sinθ]             [cosθ  -sinθ    0] 
+Rx = [1   cosθ   -sinθ]         Ry = [  0    1       0]        Rz = [sinθ   cosθ    0] 
+     [0   sinθ    cosθ]​              [-sinθ  0    cosθ]             [0       0      1] 
 
-_*okay I know you might be wondering, when do I use function pointers, functors and when do I use Lambdas ??*_
+     R=Rz​(ψ)⋅Ry​(θ)⋅Rx​(ϕ)
 
-###### My guidelines for choosing
-1. For simple, stateless calls where performance is critical, and the function will not change, a function pointer might be appropriate.
-2. When maintaining state or when the operation is complex enough to warrant its named type, consider a functor.
-3. For inline, possibly stateful operations that are concise and local to where they are used, lambdas are often the best choice.'
+     Vrotated​=R⋅v
+```
+But manually building these 3 rotation matrices each time is tedious and error-prone, and also order matters since matrix multiplication is not commutative: `A * B ≠ B * A`.
+
+So to ease things, we have Euler angles.
+
+Euler angles make this easier: they give us a shorthand using three angles (pitch, yaw, roll) representing rotation around the X, Y, and Z axes. They are human-friendly and intuitive, but under the hood, they are always converted into rotation matrices to actually perform the transformation.
+
+```js
+Euler(30°, 45°, 0°)
+This means:
+
+    Rotate 30° around the X-axis (pitch),
+
+    then 45° around the Y-axis (yaw),
+
+    then 0° around the Z-axis (roll).
+
+This triple is enough to build the full rotation matrix Rz * Ry * Rx — just plug the angles into the formulas.
+```
+
+While Euler angles are great for describing rotations around the standard X, Y, and Z axes, they don't easily capture a different kind of rotation: spinning around an arbitrary axis. That’s where axis-angle rotation comes in. Instead of rotating step-by-step around each axis like Euler does, axis-angle lets you rotate once around a custom direction in space. It’s a powerful way to describe rotation around any axis—not just the fixed X, Y, or Z.
+
+It’s like saying, rotate 60° around the axis pointing in the direction of (1, 1, 0) a diagonal between X and Y
+
+![mov](/assets/blog/axis_angle_rotation.gif)
+
+```js
+Axis: (1, 1, 0) → Normalized to (0.707, 0.707, 0)
+Angle: 60°
+
+This means: rotate the object 60° around the axis pointing diagonally between X and Y. But even axis-angle has limitations, especially when combining rotations or animating smoothly.
+```
+---
+Okay enough of matrixes, if they are so great why then do we need quaternions and what are even quaternions 
+
+Quaternions are a mathematical way of representing rotation in 3D space (more on than soon), like Euler angles and rotation matrices but they do it more robustly. They solve two big problems: gimbal lock and smooth interpolation.
+
+1. GImbal Lock: is a problem that occurs with Euler angles. Gimbal lock happens when two of the three rotation axes in Euler become aligned, essentially collapsing a degree of freedom. Imagine trying to look up at the ceiling (pitch 90°), and then turning your head left or right (yaw) does nothing — it’s like you lost one axis of rotation. That’s gimbal lock.
+
+You might say, “Just use axis-angle with matrices to avoid gimbal lock.” Sure, axis-angle avoids that specific issue in theory, but the moment you start combining rotations or chaining them (e.g., for animation), things get messy — especially when trying to interpolate between them.
+
+[More on Gimbal here]()
+
+2. Smooth Interpolation: Say you have an object facing direction A, and you want it to rotate smoothly to direction B over a few seconds (like a character turning their head or a spaceship reorienting in space). Interpolating between two Euler angles or rotation matrices often leads to weird artifacts — like unintended wobbling or non-linear speeds. Even axis-angle interpolation can behave strangely. Quaternions, however, use something called SLERP (Spherical Linear Interpolation), which gives smooth, constant-speed rotation between two orientations 
+
+
+so how do Quaternions work 
+
+You can think of a quaternion as a 4D number that encodes both the axis of rotation and the angle of rotation — all in one neat package:
+```ini
+q = [x, y, z, w]
+```
+Where:
+
+    (x, y, z) is a unit vector pointing along the rotation axis,
+
+    w is the cosine of half the rotation angle.
+
+It might feel weird at first because you don’t apply quaternions by just plugging them into a formula like matrices
+
+remember axis of rotation can be the x axis, y axis , ibetween or custom 
+
+To rotate a 3D point v using a quaternion q:
+
+    Convert the point into a pure quaternion: v_quat = [vx, vy, vz, 0]
+
+    Apply the rotation:
+
+    v_rotated = q × v_quat × q⁻¹
+
+    (Here, × means quaternion multiplication, and q⁻¹ is the inverse of q.)
+
+Yes, it looks mathy, but under the hood, libraries like Unity, Unreal, or OpenGL handle this for you.
+
+trust me most times you dont really need to use quaternions but even if you do you can always convert your euler to quat do the interpolations and what not and convert back to euler
