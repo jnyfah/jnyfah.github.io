@@ -10,6 +10,7 @@ ogImage:
   url: '/assets/blog/hrbt.jpeg'
 ---
 
+[Full C++ implementation of Quaternions here](https://github.com/JeanPhilippeKernel/RendererEngine/blob/develop/ZEngine/ZEngine/Core/Maths/Quaternion.h) 
 
 To understand quaternions, you first need to understand vectors and matrices, especially matrices because quaternions complement matrices by solving problems that arise when using matrices to represent rotations.
 
@@ -188,7 +189,7 @@ __So when do you use what?__
   - Storing and composing rotations compactly and efficiently
 
 Conversion is always possible:
-
+```js
     Euler → Quaternion
 
     Quaternion → Euler
@@ -200,6 +201,7 @@ Conversion is always possible:
     Quaternion → Rotation Matrix (for applying transforms)
 
     Rotation Matrix → Quaternion (to extract orientation)
+```
 
 So you're never stuck. Pick the format that’s easiest for your current task and convert when needed 🙂.
 
