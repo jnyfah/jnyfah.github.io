@@ -39,7 +39,7 @@ To apply a full 3D rotation, we compose these matrices (in a specific order):
 ```js
      Rotation Matrix =Rz​(θ) ⋅ Ry​(θ) ⋅ Rx​(θ)
 
-     Vrotated​= Rotation Matrix ⋅ cube
+     Vrotated​= Rotation Matrix ⋅ V
 ```
 Where `V` is your original 3D vector (or set of vectors, like a cube).
 
@@ -173,14 +173,14 @@ Let's rotate the point (1, 0, 0):
 - Original point: (1, 0, 0)
 - After 90° rotation around (1,1,1): approximately (0.333, 0.667, 0.667)
 
- > Thing is, wheather you use Euler, axis angle or Quaternions you will get same answer only that they don't all get there the same way. And they don’t all behave well when you try to combine or interpolate rotations.
+ > Thing is, whether you use Euler, axis angle or Quaternions you will get same answer only that they don't all get there the same way. And they don’t all behave well when you try to combine or interpolate rotations.
 
 Here’s the beauty: quaternions aren’t locked in a vacuum. You can convert back and forth between Euler, axis-angle, and quaternions depending on what you need and what you need depends on what you are doing.
 
 __So when do you use what?__
 
 - Euler angles are great when you're working with something familiar like pitch/yaw/roll or when your user interface expects intuitive angles. They're easy to read, but can suffer from gimbal lock and awkward interpolation.
-- Axis-angle is useful when you know you want to rotate around a specific direction by a specific amount. it's concise and geometrically meaningful. But interpolation between two axis-angle rotations isn't always smooth unless the axes match.
+- Axis-angle is useful when you know you want to rotate around a specific direction by a specific amount. it's concise and geometrically meaningful. But interpolation between two axis-angle rotations isn't always smooth too.
 - Quaternions are ideal for:
   - Smooth, continuous rotation (no weird stuttering)
   - Avoiding gimbal lock entirely
@@ -201,6 +201,6 @@ Conversion is always possible:
 
     Rotation Matrix → Quaternion (to extract orientation)
 
-So you're never stuck. Pick the format that’s easiest for your current task, convert when needed 🙂.
+So you're never stuck. Pick the format that’s easiest for your current task and convert when needed 🙂.
 
 [Full C++ implementation of Quaternions here](https://github.com/JeanPhilippeKernel/RendererEngine/blob/develop/ZEngine/ZEngine/Core/Maths/Quaternion.h) 🌴

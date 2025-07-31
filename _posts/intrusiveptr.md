@@ -56,4 +56,4 @@ The sign-up sheet is an integral part of the book. The book itself manages the c
 
 From the analogy you can see that intrusive pointers are more memory efficient since they dont have an overhead control block, but this comes at a cost of needing direct modifications to the objects they manage (intrusiveness) and a limitation in the types of objects they can manage (reduced flexibility). 😅
 
-Check out an implementation of Intrusive pointers [here](https://github.com/JeanPhilippeKernel/RendererEngine/blob/develop/ZEngine/include/ZEngine/Helpers/IntrusivePtr.h) 🙂
+Check out an implementation of Intrusive pointers [here](https://github.com/JeanPhilippeKernel/RendererEngine/blob/develop/ZEngine/ZEngine/Helpers/IntrusivePtr.h) 🙂
