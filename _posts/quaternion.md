@@ -1,5 +1,5 @@
 ---
-title: 'Quaternions wit C++ implementation'
+title: 'Quaternions with C++ implementation'
 excerpt: 'Dont get me wrong: matrices are awesome, they work great for most transformations'
 coverImage: '/assets/blog/hrbt.jpeg'
 date: '2025-07-05T11:37:01.491Z'
