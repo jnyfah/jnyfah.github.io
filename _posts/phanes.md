@@ -2,7 +2,7 @@
 title: 'Phanes: (Part 1 — The DFS)'
 excerpt: 'I was bored, and needed an excuse to use C++23'
 coverImage: '/assets/blog/preset.jpeg'
-date: '2026-04-04T11:37:01.491Z'
+date: '2026-04-17T11:37:01.491Z'
 author:
   name: Jennifer
   picture: '/assets/blog/authors/avatar.jpg'
@@ -14,7 +14,7 @@ I was bored and had just finished 2025 Advent of Code on C++23 features, and I t
 
 So I decided to work on a tiny project where I could learn something new and also apply what I had learned during Advent.
 
-Well, let’s just say it did not stay tiny.
+Well, let’s just say it did not stay tiny 😅.
 
 I built a directory analyzer: a tool that scans a filesystem path, **builds an in-memory tree representation of it**, and then runs different analyses on top of that tree. Things like summary information, largest files, largest directories, extension statistics, recently modified files, and empty directories.
 
@@ -29,11 +29,11 @@ The first version did this with a plain iterative Depth First Search. It was sin
 
 That was where the whole rabbit hole started.
 
-I first built a thread pool to run the traversal in parallel, which was definitely faster than the plain single-threaded version. But then I ran into load-balancing problems: some workers sat idle while others had a pile of work. So I moved to a work-stealing thread pool, where idle workers could steal tasks from busier ones. That improved things, but the design still had a lot of mutex contention, so eventually I replaced the locking hot paths with a lock-free approach.
+> I first built a thread pool to run the traversal in parallel, which was definitely faster than the plain single-threaded version. But then I ran into load-balancing problems: some workers sat idle while others had a pile of work. So I moved to a work-stealing thread pool, where idle workers could steal tasks from busier ones. That improved things, but the design still had a lot of mutex contention, so eventually I replaced the locking hot paths with a lock-free approach .
 
 This series is basically me working through all of that: what changed, what broke, what got better, and what I learned along the way about scheduling, contention, and memory ordering.
 
-Maybe later I’ll push the project further and turn it into something like a duplicate file finder across directories. But let’s not walk faster than our shadows.
+Maybe later I’ll push the project further and turn it into something like a duplicate file finder across directories. But let’s not walk faster than our shadows 🤪.
 
 For now, the directory analyzer itself is done, and you can check it out [here (Phanes)](https://github.com/jnyfah/phanes). Every stage of the project is a separate commit, so you can always go back and see exactly what the code looked like at each point.
 
@@ -51,7 +51,7 @@ Part 4 goes lock-free.
 
 ---
 
-## First version: the naive DFS
+### First version: the naive DFS
 
 The first version built the directory tree with an iterative DFS. It starts at the root, maintains a stack of directory IDs still to be visited, then pops them one by one, reading each directory’s contents, adding files to the tree, and pushing any subdirectories it finds back onto the stack.
 
@@ -101,13 +101,16 @@ The problem shows up when you run it against a real filesystem. I benchmarked it
 | Warm mean | 15,660 ms (min 15,503 / max 16,101 / stddev 224 ms) |
 | Warm throughput | ~158,728 entries/s |
 
-A few things stand out here. Linux scanned far more entries than Windows and still finished much faster. That says something about filesystem and platform differences, but that is not really the point of this post.
+A few things stand out here. Linux scanned far more entries than Windows and still finished nearly four times faster on a per-entry basis. That gap is worth pausing on, even if it is not the main point of this post.
 
-The point is that this builder is doing a huge amount of work on a single thread. Directory traversal is naturally full of independent work, especially once a directory contains many subdirectories, and this version leaves all of that parallelism unused.
+Some of it is almost certainly NTFS. Every `directory_iterator` call on Windows has to go through the NTFS metadata layer, which stores file attributes, timestamps, and security descriptors in a B-tree structure that requires more I/O per directory read than ext4's comparatively flat directory format. The security descriptor lookups alone add overhead that has no direct equivalent on Linux.
 
-That is the baseline.
+Page cache behavior also differs. By the warm runs, Linux had most of the directory metadata cached in the VFS entry and inode caches, which are tuned to serve repeated stat-heavy workloads quickly. Windows has an analogous cache, but it tends to be more conservative with memory and is competing with more background services on a typical desktop install.
 
-And once that baseline is clear, the next question is obvious: why am I still doing all of this on one thread?
+None of this changes the conclusion: single-threaded traversal is the bottleneck either way. But the gap is a good reminder that "filesystem traversal speed" is not a single number, it is a function of the OS, the filesystem driver, the hardware, and how warm the cache is. 
+
+The point is that scanning each subdirectory is completely independent, the contents of one directory have nothing to do with the other, so there is no reason they have to be visited one at a time, well this version of the project does not just know that yet.
+
 
 ## A note on modules and CMake
 
@@ -121,10 +124,10 @@ import core;
 export DirectoryTree build_tree(const std::filesystem::path& root);
 ```
 
-Getting this working with CMake took some patience. The combination that gave me the most consistent results was CMake 3.28+ with Ninja as the generator. Ninja handled module dependency scanning much better and avoided a lot of the friction I ran into with other setups.
+Getting this working with CMake took some patience. The combination that gave me the most consistent results was CMake 4.0+ with Ninja as the generator. Ninja handled module dependency scanning much better and avoided a lot of the friction I ran into with other setups.
 
-That said, the interesting part of this project is not the build system.
+That said, the interesting part of this project is not the build system 😏.
 
 It is what happens at runtime.
 
-And in the next part, that runtime gets its first upgrade: replacing this naive DFS traversal with a thread pool.
+And in the next part, that runtime gets its first upgrade: adding a threadpool to this DFS traversal
