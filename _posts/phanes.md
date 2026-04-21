@@ -86,8 +86,8 @@ The problem shows up when you run it against a real filesystem. I benchmarked it
 | Directories | 223,414 |
 | Files | 1,225,260 |
 | Total size | 667 GB |
-| Cold run | 65,836 ms |
-| Warm mean | 65,204 ms (min 65,057 / max 65,347 / stddev 107 ms) |
+| Cold run | 65,836 ms|
+| Warm mean | 65,204 ms|
 | Warm throughput | ~41,153 entries/s |
 
 **Linux — /home**
@@ -98,7 +98,7 @@ The problem shows up when you run it against a real filesystem. I benchmarked it
 | Files | 1,937,334 |
 | Total size | 281 GB |
 | Cold run | 17,124 ms |
-| Warm mean | 15,660 ms (min 15,503 / max 16,101 / stddev 224 ms) |
+| Warm mean | 15,660 ms|
 | Warm throughput | ~158,728 entries/s |
 
 A few things stand out here. Linux scanned far more entries than Windows and still finished nearly four times faster on a per-entry basis. That gap is worth pausing on, even if it is not the main point of this post.
