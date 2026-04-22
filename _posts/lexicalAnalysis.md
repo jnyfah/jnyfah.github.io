@@ -27,7 +27,7 @@ Using the language analogy, tokens are like words, and each language has words a
 
 According to the lexical grammar, not all tokens are valid, and not all tokens are important. For example, comments and white space (like spaces and tabs) are like the garnishes on a dish – they make your code look pretty, but they don't actually do anything.
 
-As mentioned earlier in the [previous blog post](_posts/curiousx.md), I will be building an expressions only compiler using C++ to keep things simple, this means our lexical analyzer only recognizes tokens associated with mathematical expressions, here is a list of tokens the lexer can recognize 
+As mentioned earlier in the [previous blog post](/posts/curiousx.md), I will be building an expressions only compiler using C++ to keep things simple, this means our lexical analyzer only recognizes tokens associated with mathematical expressions, here is a list of tokens the lexer can recognize 
 
 ```cpp
 enum class LexerTokenType {

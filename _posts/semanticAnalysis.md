@@ -71,7 +71,7 @@ For example, consider the following expression in our CuriousX:
 x = 5 + 2 * 3
 ```
 
-The lexer output for this expression as stated in the [previous Lexical Analysis post](/_posts/lexicalAnalysis.md) would be:
+The lexer output for this expression as stated in the [previous Lexical Analysis post](/posts/lexicalAnalysis.md) would be:
 
 ```jsx
 
@@ -84,7 +84,7 @@ The lexer output for this expression as stated in the [previous Lexical Analysis
 [3]    ->   <line:1, col:12>;	 IntToken
 ```
 
-A parse tree for this expression also stated in the [previous Syntax Analysis post](/_posts/syntaxAnalysis.md) would have the following structure:
+A parse tree for this expression also stated in the [previous Syntax Analysis post](/posts/syntaxAnalysis.md) would have the following structure:
 ```
                          =
                         / \
