@@ -21,7 +21,7 @@ Oh well, a compiler is one components in a toolchain of programs used to create 
 
 ![toolchain](/assets/blog/tools.jpg)
 
-To learn more about the toolchain, [check previous post](/posts/buildsystems2.md).
+To learn more about the toolchain, [check previous post](/posts/buildsystems2).
 
 A compiler literally just takes input from the preprocessor in form of translation unit and outputs an assembly code specific to your target architecture.
 
