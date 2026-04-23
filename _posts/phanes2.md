@@ -12,7 +12,7 @@ ogImage:
 
 ---
 
-In [Part 1](_posts/phanes.md), I benchmarked a single-threaded DFS traversal against real filesystems and landed on an obvious conclusion: scanning thousands of entries on one thread does not make any sense atall. Directory traversal is independent, this means the contents of one directory have nothing to do with the contents of another, so there is no reason they have to be visited one at a time.
+In [Part 1](/posts/phanes), I benchmarked a single-threaded DFS traversal against real filesystems and landed on an obvious conclusion: scanning thousands of entries on one thread does not make any sense atall. Directory traversal is independent, this means the contents of one directory have nothing to do with the contents of another, so there is no reason they have to be visited one at a time.
 
 The natural fix is a thread pool. 😑
 
