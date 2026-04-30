@@ -188,7 +188,7 @@ __Part 4 will revisit memory ordering in much more depth when the mutexes themse
 
 ## The results
 
-**Linux — /home** *(22 threads — hardware_concurrency)*
+**Linux — /home** *(22 threads — hardware_concurrency | Clang + Ninja)*
 
 | | |
 |---|---|
@@ -200,23 +200,23 @@ __Part 4 will revisit memory ordering in much more depth when the mutexes themse
 | Warm throughput | ~307,085 entries/s |
 | Speedup vs Part 2 | **~1.2x** |
 
-**Windows — C:\\** *(32 threads — hardware_concurrency)*
+**Windows — C:\\** *(32 threads — hardware_concurrency | MSVC)*
 
 | | |
 |---|---|
-| Directories | 227,533 |
-| Files | 1,249,097 |
-| Symlinks | 37 |
-| Cold run | 7,760 ms |
-| Warm mean | 7,949 ms |
-| Warm throughput | ~187,150 entries/s |
-| Speedup vs Part 2 | **~0.89x** |
+| Directories | 229,868 |
+| Files | 1,262,074 |
+| Symlinks | 29 |
+| Cold run | 11,861 ms |
+| Warm mean | 12,540 ms |
+| Warm throughput | ~118,971 entries/s |
+| Speedup vs Part 2 | **~0.57x — slower than Part 2** |
 
-Linux improved modestly over Part 2. Windows is harder to read cleanly across multiple runs, warm throughput swung between ~141k and ~205k entries/s on identical code on the same machine. The table above shows a representative run, not the best one.
+Linux improved modestly over Part 2. Windows went backwards, this version is nearly half the throughput of the plain thread pool from Part 2.
 
-That variance is itself the result worth paying attention to. Linux was consistent across runs. Windows was not. The work stealing machinery threads repeatedly trying to acquire each other's mutexes in a tight loop, backing off, yielding, retrying interacts unpredictably with the Windows scheduler and the NTFS layer in a way that Linux simply does not show.
+The work stealing machinery is costing more than it is saving on Windows: threads repeatedly trying to acquire each other's mutexes in a tight loop, backing off, yielding, retrying, all of that overhead seems harder on Windows than on Linux, where the scheduler and filesystem layer are cheaper to begin with.
 
-The per-thread queue helped on the happy path, where a thread works through its own queue without touching anyone else's lock. But the stealing path which is the exact path that activates under load imbalance, the problem we were trying to solve is still acquiring and releasing locks constantly. On Windows, that cost is noisy enough to erase the gains from better load distribution.
+The per-thread queue helped on the happy path, where a thread works through its own queue without touching anyone else's lock. But the stealing path which is the exact path that activates under load imbalance, the problem we were trying to solve is still acquiring and releasing locks constantly. On Windows, that cost is enough to make this version strictly worse than the simpler design from Part 2.
 
 The only way to make the stealing path cheaper is to remove the locks from it entirely. That is what Part 4 is about.
 
