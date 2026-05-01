@@ -2,7 +2,7 @@
 title: 'Phanes: (Part 4 — Lock-Free)'
 excerpt: 'Removing the last locks, one memory order at a time'
 coverImage: '/assets/blog/lockfree.jpeg'
-date: '2026-04-25T11:37:01.491Z'
+date: '2026-05-01T11:37:01.491Z'
 author:
   name: Jennifer
   picture: '/assets/blog/authors/avatar.jpg'
@@ -10,15 +10,15 @@ ogImage:
   url: '/assets/blog/lockfree.jpeg'
 ---
 
-In [Part 3](/posts/phanes3/), work stealing gave each thread its own queue and let idle threads steal tasks from busy ones. The happy path got genuinely better, a thread working through its own queue touches no other thread's lock at all. But the stealing path, which is the exact path that activates when load imbalance is highest, was still acquiring and releasing mutexes in a tight loop. On Windows, that overhead was bad enough to make Part 3 slower than the plain thread pool from Part 2.
+In [Part 3](/posts/phanes3/), work stealing gave each thread its own queue and let idle threads steal tasks from busy ones, this meant a thread working through its own queue touches no other thread's lock at all. But the stealing path, the exact path that matters when load imbalance is highest was still acquiring and releasing mutexes in a tight loop. On Windows, that overhead was bad enough to make Part 3 slower than the plain thread pool from Part 2.
 
-The fix is to make the deque itself lock-free.
+The fix is to make the deque itself lock-free so there will be no mutex contention when stealing
 
 ---
 
 ## What lock-free actually means
 
-Lock-free does not mean no synchronization. It means no mutexes. The threads still coordinate, they just do it with atomic operations and memory ordering guarantees instead of locks.
+Lock-free does not mean no synchronization it just means no mutexes. The threads still coordinate, they just do it with atomic operations and memory ordering guarantees instead of locks. I have added links to resources at the end of this post for more insights to atomic operations.
 
 The deque needs three operations just like the normal deque:
 
@@ -28,13 +28,15 @@ The deque needs three operations just like the normal deque:
 
 Owner operations happen at the back, stealing happens at the front as before so it means the owner and thieves are usually touching different ends of the deque and do not interfere with each other at all.
 
-The one hard case is when there is exactly one item left. Both the owner popping from the back and a thief stealing from the front want the same slot. In Part 3 this was not a problem because the mutex on the deque meant only one thread could be inside the operation at a time, so whoever got the lock got the item and the other thread just saw an empty deque. Here there is no mutex. Both threads can be mid-operation simultaneously, having already read the same state. Only one of them can win, and both need to know who won without anything serializing them. That is where the interesting memory ordering work lives, and we will get to it.
+The one hard case is when there is exactly one item left. Both the owner popping from the back and a thief stealing from the front want the same slot. In [Part 3](/posts/phanes3/) this was not a problem because the mutex on the deque meant only one thread could be inside the operation at a time, so whoever got the lock got the item and the other thread just saw an empty deque. 
+
+Here there is no mutex. Both threads can be mid-operation simultaneously, having already read the same state. Only one of them can win, and both need to know who won without anything serializing them. That is where the interesting memory ordering work lives, and we will get to it. 
 
 ---
 
-## The Buffer — a circular array
+### The Buffer
 
-The deque is backed by a dynamically resizable circular buffer:
+The deque uses a dynamically resizable circular buffer:
 
 ```cpp
 struct Buffer
@@ -70,15 +72,15 @@ For example, with capacity 8 (binary `1000`), the mask is 7 (binary `0111`). Any
 
 ---
 
-## False sharing and alignas(64)
+### False sharing and alignas(64)
 
-Before we look at the member variables, there is a hardware detail worth understanding because it directly shapes the design.
+Before we look at the member variables, there is a hardware detail worth understanding first.
 
 Modern CPUs do not read and write individual bytes from memory. They work in chunks called **cache lines**  typically 64 bytes on x86. When a CPU core reads a variable, it loads the entire cache line containing it into its L1 cache. When it writes to that variable, it marks the entire cache line as modified and invalidates copies of it in every other core's cache.
 
 This becomes a problem when two threads are writing to *different* variables that happen to live on the *same* cache line. Neither thread is actually sharing data they are writing to separate variables but the CPU does not know that. Every write by one thread invalidates the cache line for the other, forcing a cache miss on the next access. This is **false sharing**, and it is a silent performance killer in multithreaded code.
 
-[Scott Meyers talk on Cpu Caches and Why You Care](https://youtu.be/WDIkqP4JbkE?si=TDwcUloUJQt_nKZS) goes deep in details about this 
+[Scott Meyers talk on Cpu Caches and Why You Care](https://youtu.be/WDIkqP4JbkE?si=TDwcUloUJQt_nKZS) goes deep in details about this.
 
 In our deque, `front` is written by thieves and `back` is written by the owner. They are completely independent variables, but if they land on the same cache line, every time a thief updates `front` it invalidates the owner's cached copy of `back` and vice versa even though neither actually cares about the other's variable.
 
@@ -94,20 +96,27 @@ alignas(64) std::atomic<Buffer*> buffer;
 
 ---
 
-## Memory ordering — just enough to read the code
+### Memory ordering
 
-This is the part I said I would not skip, and I meant it. You do not need to understand the full C++ memory model to follow what comes next, but you do need to understand what problem memory ordering is solving.
+Memory ordering is the trickiest part of this deque, but understanding the basics is enough to follow the design. Links at the end for more insights
 
 CPUs and compilers are allowed to reorder instructions for performance. On a single thread this is invisible the result is always the same as if everything 
 ran in order. 
 
-TODO: give and example of compiler reordering on single thread and how it does not affect 
+For example, a compiler might reorder these two lines:
 
-But on multiple threads, reordering in one thread can become visible to another thread in ways that break correctness. Memory ordering is how you tell the compiler and CPU which reorderings are not allowed.
+```cpp
+int x = compute();   // expensive
+log_start = true;    // flag
+```
 
-There are four orderings we use in this deque:
+The compiler might reorder this by storing `log_start` first, then computing `x`. On a single thread you would never notice because no one else is watching. But if another thread is waiting for `log_start` to be true before reading `x`, it might read `x` before it has been computed, hat is the problem memory ordering prevents.
 
-**`memory_order_relaxed`** — the operation is atomic yes but the compiler and CPU can reorder it freely relative to other operations. Use this when you only need the atomicity, not any ordering guarantee. Reads and writes with relaxed ordering are the cheapest.
+On multiple threads, reordering in one thread can become visible to another thread in ways that break correctness. Memory ordering is how you tell the compiler and CPU which reorderings are not allowed.
+
+C++ has six memory orderings in total, well actually 5 because one of them have been depreciated :
+
+**`memory_order_relaxed`** — this means the operation is atomic yes but the compiler and CPU can reorder it freely relative to other operations. Use this when you only need the atomicity, not any ordering guarantee. Reads and writes with relaxed ordering are the cheapest.
 
 **`memory_order_acquire`** — no memory operation *after* this load in program order can be reordered to appear *before* it. Think of it as a one-way barrier: everything below stays below.
 
@@ -117,8 +126,9 @@ There are four orderings we use in this deque:
 
 **`memory_order_seq_cst`** — sequential consistency. Every seq_cst operation participates in a single global total order that all threads agree on. This is the strongest and most expensive ordering.
 
-TODO : do better in the paragraph
-**Fences** — `std::atomic_thread_fence` applies an ordering constraint without attaching it to a specific atomic variable. A `seq_cst` fence establishes a point in the global order that all threads can reason about, regardless of which variables they are operating on.
+**`memory_order_acq_rel`** — both acquire and release at once. This is used on read-modify-write operations, where a single operation both reads and writes. The acquire side prevents reordering of operations after it, the release side prevents reordering of operations before it. 
+
+**Fences** — `std::atomic_thread_fence` applies an ordering constraint without attaching it to a specific atomic variable. Where acquire and release are tied to a single load or store, a fence covers *all* memory operations around it.
 
 ### Why seq_cst global ordering matters:
 
@@ -143,32 +153,13 @@ void reader_d() {
 
 `reader_c` waits until it sees `x == true`, then reads `y`. `reader_d` waits until it sees `y == true`, then reads `x`. Can we end up with both `r1 == 0` and `r2 == 0`?
 
-TODO: frame better 
-lets see, remember they are all running on different threads, thread 1 runs writer_a, thread 2 runs writer_b, thread 3 runs reader_c and thread 4 runs reader_d
+Thread 3 runs `reader_c`, it spins until it sees `x == true`, then reads `y`. Thread 4 runs `reader_d`, it spins until it sees `y == true`, then reads `x`.
 
-now imagine thread 3 sees this 
-x = 1 then y =1 next 
-since it sees x =1 firsts the while loop passes and sets r1 to 0
+Let us think through what can go wrong without a global order. 
 
-but what thread 4 sees is 
-y =1 and then x = 1
-here it sees y -1 first and sets r2 to 0 too 
+Without a global ordering, thread 3 could see the stores in the order `x, y`: it unblocks on `x`, reads `y`, and gets `r1 = 0` because from its perspective `y` has not been stored yet. Simultaneously, thread 4 could see the stores in the order `y, x`: it unblocks on `y`, reads `x`, and gets `r2 = 0` for the same reason. Both readers are observing a different order of the same two stores, and both walk away with the wrong answer at the same time.
 
-so you see thread 3 and 4 need to agree, on an order to which they see things, are we seeing x before y or y before x,lets pick one and agree on, it does not matter which other we pick but lets just agree on one certain order 
-
-
-With seq_cst, no. Every seq_cst operation joins a single global timeline. Either 
-`x.store` comes before `y.store` in that timeline or the other way around. If 
-`x` comes first, then by the time `reader_d` sees `y == true`, `x == true` is 
-already in the global order before it, so `r2` must be 1. If `y` comes first, 
-the same argument applies for `r1`.
-
-Without seq_cst — say, with just acquire/release — there is no global timeline. 
-Each thread has its own view of the order in which stores happened, and those 
-views can disagree. It becomes possible for `reader_c` to see `x` but not yet 
-`y`, and simultaneously for `reader_d` to see `y` but not yet `x`, yielding both 
-`r1 == 0` and `r2 == 0`. Both readers would be wrong about the state of the 
-world at the same time.
+With seq_cst, every operation joins a single global timeline. Either `x.store` comes before `y.store` in that timeline or the other way around but all threads agree on which. If `x` comes first, then by the time `reader_d` sees `y == true`, `x == true` is already earlier in the global order, so `r2` must be 1. The same logic applies the other way around for `r1`. Both `r1 == 0` and `r2 == 0` becomes impossible.
 
 
 ---
@@ -206,7 +197,7 @@ auto push_back(T item) -> void
 
 ---
 
-## `pop_back` — the owner takes a task
+## pop_back: the owner takes a task
 
 ```cpp
 auto pop_back() noexcept -> std::optional<T>
@@ -252,12 +243,20 @@ This function has two cases: more than one item, and exactly one item.
 
 **The fence.** The seq_cst fence between `back.store(b)` and `front.load()` is the most subtle part of the whole deque. Here is why it is necessary.
 
-The owner decrements `back` to signal "I am claiming this slot." A thief loads `back` to check if there is anything to steal. Without the fence, the CPU could reorder the owner's `back.store` and `front.load` — the owner might read `front` before its store to `back` is visible to the thief. At the same time, the thief might have already read `back` before the owner's store, decided the deque was empty, and given up. Both threads walk away thinking the deque is empty when 
-there was actually one item. A task gets lost.
+TODO this whole section is slightly off because seq cst global order is btwe the back sotre and front load, the cas front on pop the cas on steal, the banc and front load on steal, so when explaaining why fence is there, we ned to make it makes sense not just cuz we want back soted before we load fence but cuz we dont want unnecsaaery cas fails even tho CAS catches all
+
+
+The owner decrements `back` to signal "I am claiming this slot." A thief loads `back` to check if there is anything to steal. Without the fence, threads may make decisions from stale views and perform unnecessary retries / failed CAS attempts
+
 
 The seq_cst fence establishes a point in the global order. The owner's `back.store` happens before the fence; the owner's `front.load` happens after. The thief's seq_cst fence in `steal_front` does the same. The global order guarantee means at least one of them sees the other's write — the race resolves correctly, and the CAS ensures only one of them claims the item.
 
-todo: do we need to add that without the fence, nothing actually happens like they both wont et the smae lement, CAS will catch everything  ?? but the fence just makes sure the loser dont not waste time going to CAS, there by derailing performance 
+One thing worth being honest about: without the fence, the CAS would still prevent both threads from claiming the same item. The CAS is the true safety net — only one thread can successfully advance `front`, so correctness is preserved either way.
+
+
+
+The fence is about performance, not safety. Without it, a thread might decrement `back`, fail to see the thief's update to `front` due to reordering, conclude the deque is empty, then proceed to the CAS only to lose it  wasting the round trip to the CAS entirely. The fence ensures that by the time either thread checks the other's index, they are seeing a consistent enough view of the world to make a good decision before committing. Fewer wasted CAS attempts means less contention on `front`,which matters when you have 32 threads all potentially stealing at.once.
+
 
 ---
 
@@ -292,12 +291,7 @@ fence covers all memory operations around it attaching acquire to the load would
 
 **The CAS on `front`** is the commitment. The thief reads the value at `f`, then tries to advance `front` from `f` to `f + 1`. If another thief or the owner has already advanced `front`, the CAS fails and the thief returns `nullopt` and tries again. If the CAS succeeds, the thief has claimed the item.
 
-Todo: is there a point of talking about ABA problem ?????? 
-**Is there an ABA problem?** ABA is when a variable changes from A to B and back 
-to A between your read and your CAS, making the CAS succeed even though the world 
-has changed. Here it cannot happen: `front` is monotonically increasing. Once it 
-advances past a value, it never returns to it. A thief reading `f` and then 
-CAS-ing `f → f + 1` is safe — if the CAS succeeds, `front` really was still `f`.
+**Is there an ABA problem?** ABA is a classic lock-free hazard: a variable changes from A → B → A between your read and your CAS, so the CAS succeeds even though the world changed underneath you. Here it cannot happen. `front` is monotonically increasing — it only ever moves forward. Once it advances past a value it never returns to it, so a thief reading `f` and CAS-ing `f → f + 1` is always safe. If the CAS succeeds, `front` really was still `f`.
 
 ---
 
@@ -317,115 +311,73 @@ The safe solution is to keep all old buffers alive. In our case the deque is own
 
 ## The results
 
-linux
-============================================================
-  Phanes build_tree benchmark  [multithreaded]
-  Path          : /home
-  Warm runs     : 5
-  Pool threads  : 22 (hardware_concurrency)
-  Note: ThreadPool is created fresh per build_tree() call
-        so thread startup cost is included in every timing
-============================================================
+**Linux — /home** *(22 threads — hardware_concurrency | Clang + Ninja)*
 
-[1/3] Cold run (first call, OS page cache may be empty)...
-  Result    : 596587 dirs, 1985366 files, 7918 symlinks, 0 errors
-  Cold time : 2815.3 ms
+| | |
+|---|---|
+| Directories | 596,587 |
+| Files | 1,985,366 |
+| Symlinks | 7,918 |
+| Cold run | 2,815 ms |
+| Warm mean | 2,839 ms |
+| Warm throughput | ~912,314 entries/s |
+| Speedup vs Part 3 | **~2.97x** |
 
-[2/3] Warm runs (OS page cache populated)...
-  run  1/ 5... 2424.6 ms
-  run  2/ 5... 2777.8 ms
-  run  3/ 5... 2783.9 ms
-  run  4/ 5... 3139.6 ms
-  run  5/ 5... 3068.1 ms
-------------------------------------------------------------
+**Windows — C:\\** *(32 threads — hardware_concurrency | MSVC)*
 
-[3/3] Summary
-------------------------------------------------------------
-  Cold (1 run)
-    time       : 2815.3 ms
-    throughput : 919930 entries/s
+| | |
+|---|---|
+| Directories | 233,107 |
+| Files | 1,275,311 |
+| Symlinks | 30 |
+| Cold run | 6,225 ms |
+| Warm mean | 6,265 ms |
+| Warm throughput | ~240,771 entries/s |
+| Speedup vs Part 3 | **~2.02x** |
 
-  Warm (5 runs)
-  wall-clock    mean=  2838.8 ms  min=  2424.6 ms  max=  3139.6 ms  stddev= 253.5 ms
-                throughput ~912314 entries/s
-============================================================
+The Linux number is the one that stands out. Nearly 3x faster than Part 3 and almost 6x faster than the single-threaded baseline from Part 1 — from removing mutexes on a path that was already parallel. That is how much the lock overhead was costing on the steal path.
 
-Note: cold >> warm means I/O bound (disk/kernel readdir latency).
-      cold ~= warm means CPU/allocation bound (tree construction).
+Windows tells a cleaner story than Part 3 did. The warm runs are remarkably consistent — the cold run and warm mean are almost identical, which means the bottleneck is no longer the page cache or the mutex lottery but something predictable and steady. The lock-free steal path removed the variance that made Part 3's Windows numbers so noisy.
 
-jennifer-chukwu@jennifer-chukwu:~/phanes$ c
-
-windows 
-
-./build/msvc/bench/release/phanes_bench.exe C:\
-============================================================
-  Phanes build_tree benchmark  [multithreaded]
-  Path          : C:\
-  Warm runs     : 5
-  Pool threads  : 32 (hardware_concurrency)
-  Note: ThreadPool is created fresh per build_tree() call
-        so thread startup cost is included in every timing
-============================================================
-
-[1/3] Cold run (first call, OS page cache may be empty)...
-  Result    : 233107 dirs, 1275311 files, 30 symlinks, 0 errors
-  Cold time : 6224.5 ms
-
-[2/3] Warm runs (OS page cache populated)...
-  run  1/ 5... 6298.9 ms
-  run  2/ 5... 6305.4 ms
-  run  3/ 5... 6128.6 ms
-  run  4/ 5... 6391.0 ms
-  run  5/ 5... 6201.5 ms
-------------------------------------------------------------
-
-[3/3] Summary
-------------------------------------------------------------
-  Cold (1 run)
-    time       : 6224.5 ms
-    throughput : 242341 entries/s
-
-  Warm (5 runs)
-  wall-clock    mean=  6265.1 ms  min=  6128.6 ms  max=  6391.0 ms  stddev=  90.9 ms
-                throughput ~240771 entries/s
-============================================================
-
-Note: cold >> warm means I/O bound (disk/kernel readdir latency).
-      cold ~= warm means CPU/allocation bound (tree construction).
-
-PS C:\phanes>
+It is also worth noting that Linux's cold run (2,815ms) is essentially the same as the warm mean (2,839ms). That is a sign the workload has shifted from I/O bound to CPU/allocation bound — the traversal is now fast enough that the page cache barely matters. The tree construction and memory allocation are the remaining bottleneck,not the filesystem reads.
 
 
 ---
 
 ## How far we have come
 
-| Version | Linux throughput | Windows throughput |
+| Version | Linux (warm) | Windows (warm) |
 |---|---|---|
-| Part 1 — DFS | ~158,728/s | ~41,153/s |
-| Part 2 — Thread pool | ~256,145/s | ~209,385/s |
-| Part 3 — Work stealing | ~307,085/s | ~118,971/s |
-| Part 4 — Lock-free | | |
+| Part 1 — Single-threaded DFS | 15,660 ms | 65,204 ms |
+| Part 2 — Thread pool | 10,031 ms | 7,058 ms |
+| Part 3 — Work stealing (mutex) | 8,452 ms | 12,540 ms |
+| Part 4 — Work stealing (lock-free) | 2,839 ms | 6,265 ms |
+
+
+On Linux, what took nearly 16 seconds on a single thread now finishes in under 3. On Windows, what took over a minute now takes 6 seconds.
+
+Part 2 gave the biggest structural jump on Windows by introducing parallelism at all. Part 4 gave the biggest jump on Linux by getting the steal path out of the way of the threads that were already working well together. Part 3 was the awkward middle child on both platforms — better load distribution on paper, but the mutex overhead was eating the gains
+
 
 ---
 
+
+
 ## Further reading
 
-If this post left you wanting to go deeper, these are the resources that actually helped me understand this stuff rather than just copy it, i know its alot sorryyy :
-
-CppCon 2017: Fedor Pikus “C++ atomics, from basic to advanced. What do they really do?”  https://youtu.be/ZQFzMfHIxng?si=eCx1JM_sFqHQRsbU
+I promised links and here they are. These are the resources that actually helped me understand this rather than just cargo-cult the memory orders:
 
 
-C++11 to C++23 in the C++ Memory Model - Alex Dathskovsky - C++Now 2024 https://youtu.be/VWiUYbtSWRI?si=-IP4ZD2e1K5JQJEz
+- **Scott Meyers** - [Cpu Caches and Why You Care](https://youtu.be/WDIkqP4JbkE?si=TDwcUloUJQt_nKZS)
 
+- **Fedor Pikus — "C++ atomics, from basic to advanced"** (CppCon 2017)  [youtu.be/ZQFzMfHIxng](https://youtu.be/ZQFzMfHIxng?si=eCx1JM_sFqHQRsbU) — the most thorough walkthrough of what atomics actually do at the hardware level.
 
-CppCon 2014: Herb Sutter "Lock-Free Programming (or, Juggling Razor Blades), Part I" https://youtu.be/c1gO9aB9nbs?si=GU29iRlrW_BjGVZ0
+- **Herb Sutter — "Lock-Free Programming", Parts I & II** (CppCon 2014)  [Part I](https://youtu.be/c1gO9aB9nbs?si=GU29iRlrW_BjGVZ0) · [Part II](https://youtu.be/CmxkPChOcvw?si=p_Cf_-w4p2pGO0xe) — the razor blades talk. Part II is where the deque-style reasoning lives.
 
-CppCon 2014: Herb Sutter "Lock-Free Programming (or, Juggling Razor Blades), Part II"  https://youtu.be/CmxkPChOcvw?si=p_Cf_-w4p2pGO0xe
+- **Alex Dathskovsky — "C++11 to C++23 in the C++ Memory Model"** (C++Now 2024)  [youtu.be/VWiUYbtSWRI](https://youtu.be/VWiUYbtSWRI?si=-IP4ZD2e1K5JQJEz) — good for seeing how the model has evolved and where it is going.
 
+- **Michael Wong — "C++11/14/17 atomics and memory model"** (CppCon 2015)  [youtu.be/DS2m7T6NKZQ](https://youtu.be/DS2m7T6NKZQ?si=J3jQJDMPBxG_Fih3)
 
-CppCon 2015: Michael Wong “C++11/14/17 atomics and memory model..."  https://youtu.be/DS2m7T6NKZQ?si=J3jQJDMPBxG_Fih3
+- **Mara Bos — "Rust Atomics and Locks", Chapter 3: Memory Ordering**  [mara.nl/atomics/memory-ordering.html](https://mara.nl/atomics/memory-ordering.html) 
 
-https://mara.nl/atomics/memory-ordering.html  Rust Atomics and Locks Chapter 3. Memory Ordering
-
-chase lev paper https://dl.acm.org/doi/10.1145/1073970.1073974
+- **Chase & Lev — "Dynamic Circular Work-Stealing Deque"** (2005)  [dl.acm.org/doi/10.1145/1073970.1073974](https://dl.acm.org/doi/10.1145/1073970.1073974) — the original paper. Short and worth reading once the code makes sense.

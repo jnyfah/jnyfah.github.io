@@ -216,7 +216,7 @@ Linux improved modestly over Part 2. Windows went backwards, this version is nea
 
 The work stealing machinery is costing more than it is saving on Windows: threads repeatedly trying to acquire each other's mutexes in a tight loop, backing off, yielding, retrying, all of that overhead seems harder on Windows than on Linux, where the scheduler and filesystem layer are cheaper to begin with.
 
-The per-thread queue helped on the happy path, where a thread works through its own queue without touching anyone else's lock. But the stealing path which is the exact path that activates under load imbalance, the problem we were trying to solve is still acquiring and releasing locks constantly. On Windows, that cost is enough to make this version strictly worse than the simpler design from Part 2.
+The per-thread queue helped when a thread works through its own queue without touching anyone else's lock. But the stealing path the exact path that activates under load imbalance, the problem we were trying to solve is still acquiring and releasing locks constantly. On Windows, that cost is enough to make this version strictly worse than the simpler design from Part 2.
 
 The only way to make the stealing path cheaper is to remove the locks from it entirely. That is what Part 4 is about.
 
