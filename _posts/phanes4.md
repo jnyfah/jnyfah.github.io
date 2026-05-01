@@ -130,7 +130,7 @@ C++ has six memory orderings in total, well actually 5 because one of them have 
 
 **Fences** — `std::atomic_thread_fence` applies an ordering constraint without attaching it to a specific atomic variable. Where acquire and release are tied to a single load or store, a fence covers *all* memory operations around it.
 
-### Why seq_cst global ordering matters:
+#### Why seq_cst global ordering matters:
 
 Consider four threads running simultaneously each thread runs each function:
 
@@ -197,7 +197,7 @@ auto push_back(T item) -> void
 
 ---
 
-## pop_back: the owner takes a task
+### pop_back: the owner takes a task
 
 ```cpp
 auto pop_back() noexcept -> std::optional<T>
@@ -237,30 +237,70 @@ auto pop_back() noexcept -> std::optional<T>
 
 This function has two cases: more than one item, and exactly one item.
 
-**More than one item** is straightforward. The owner decrements `back`, checks that the deque is not empty (`f > b`), and returns the item at the new `back`. No thieves are racing for this item because thieves only touch `front`.
+**More than one item** is straightforward. If, after decrementing `back`, we have:
 
-**Exactly one item** (`f == b`) is the race condition. Both the owner trying to pop from the back and a thief trying to steal from the front want this same item. The CAS on `front` resolves it: whoever successfully advances `front` from `f` to `f + 1` wins. If the owner wins, it returns the item. If the thief wins first, the owner's CAS fails and it returns `nullopt`.
+```cpp
+f < b
+```
 
-**The fence.** The seq_cst fence between `back.store(b)` and `front.load()` is the most subtle part of the whole deque. Here is why it is necessary.
+then the deque still contains at least one element. That case is simple, the owner has removed an item from the back and can return it immediately. Thieves steal from the opposite end (front), so they are not competing for this slot.
 
-TODO this whole section is slightly off because seq cst global order is btwe the back sotre and front load, the cas front on pop the cas on steal, the banc and front load on steal, so when explaaining why fence is there, we ned to make it makes sense not just cuz we want back soted before we load fence but cuz we dont want unnecsaaery cas fails even tho CAS catches all
+**Empty after decrement** If:
+
+```cpp
+f > b
+```
+
+then the owner overstepped the deque was already empty. We restore back to match front and return nullopt.
+
+**Exactly one item** 
+```cpp
+f == b
+```
+
+Now front and back refer to the same final slot, that means two threads may want the same task:
+
+- the owner calling pop_back()
+- a thief calling steal_front()
+
+Only one of them may take it and the winner is decided by the CAS on front:
+
+```cpp
+front : f -> f + 1
+```
+
+If the owner's CAS succeeds, it claims the last item and returns it. If the CAS fails, another thread already moved front, so the owner lost the race and returns nullopt.
+
+This CAS is the true correctness mechanism. It guarantees the final element is claimed once.
+
+**Why the seq_cst fence exists:** The subtle part of pop_back() is the fence placed between: `back.store(b)` and `front.load()`. At first glance it looks like the fence exists only to order those two lines, but its job is bigger than that.
+
+This last-item race involves four seq_cst events:
+
+- the owner's fence in pop_back
+- the thief's fence in steal_front
+- the owner's CAS on front
+- the thief's CAS on front
+
+All of them participate in one global seq_cst order. That shared order helps both threads make decisions from a more consistent view of the deque boundaries.
+
+The owner first shrinks the back boundary: `back = b` which means: “From my side, one slot is gone.” A thief is reading back to decide whether work still exists.
+
+Without the fence, the thief may still observe the old back, think an item is available, continue to the CAS, and lose. The owner can suffer the same kind of stale observation against a thief's progress.
+
+Nothing becomes incorrect, the CAS still resolves ownership but both sides may perform unnecessary CAS attempts based on outdated views.
+
+The fence reduces that wasted contention.
+
+It forces the owner's boundary update to participate in the same global ordering as the thief's observations and both CAS operations. That makes it more likely each side sees fresh enough state to avoid pointless races.
 
 
-The owner decrements `back` to signal "I am claiming this slot." A thief loads `back` to check if there is anything to steal. Without the fence, threads may make decisions from stale views and perform unnecessary retries / failed CAS attempts
-
-
-The seq_cst fence establishes a point in the global order. The owner's `back.store` happens before the fence; the owner's `front.load` happens after. The thief's seq_cst fence in `steal_front` does the same. The global order guarantee means at least one of them sees the other's write — the race resolves correctly, and the CAS ensures only one of them claims the item.
-
-One thing worth being honest about: without the fence, the CAS would still prevent both threads from claiming the same item. The CAS is the true safety net — only one thread can successfully advance `front`, so correctness is preserved either way.
-
-
-
-The fence is about performance, not safety. Without it, a thread might decrement `back`, fail to see the thief's update to `front` due to reordering, conclude the deque is empty, then proceed to the CAS only to lose it  wasting the round trip to the CAS entirely. The fence ensures that by the time either thread checks the other's index, they are seeing a consistent enough view of the world to make a good decision before committing. Fewer wasted CAS attempts means less contention on `front`,which matters when you have 32 threads all potentially stealing at.once.
+> CAS provides correctness. The seq_cst fence improves coordination and performance under contention.
 
 
 ---
 
-## `steal_front` — the thief's view
+### steal_front: the thief's view
 
 ```cpp
 auto steal_front() noexcept -> std::optional<T>
@@ -284,18 +324,25 @@ auto steal_front() noexcept -> std::optional<T>
 }
 ```
 
-**`front` load is relaxed before the fence** because the fence itself provides the ordering. Loading `front` with acquire instead would also be correct, but the 
-fence covers all memory operations around it attaching acquire to the load would be redundant.
+A thief steals from the opposite end of the deque. While the owner works from the back, thieves compete at the front. 
 
-**`back` load is acquire** to sync with the owner's release store in `push_back`. If the owner has pushed items and released `back`, the thief's acquire load guarantees it sees those items in the buffer before deciding whether to steal.
+This separation is what makes work stealing efficient most of the time. The thief first reads front, then passes through a seq_cst fence, then reads back. It is trying to answer one question: “Is there still an item available between front and back?”
 
-**The CAS on `front`** is the commitment. The thief reads the value at `f`, then tries to advance `front` from `f` to `f + 1`. If another thief or the owner has already advanced `front`, the CAS fails and the thief returns `nullopt` and tries again. If the CAS succeeds, the thief has claimed the item.
+If: `f >= b` then the deque is empty and the thief returns nullopt. and If: `f < b` then at least one item appears available, so the thief continues.
 
-**Is there an ABA problem?** ABA is a classic lock-free hazard: a variable changes from A → B → A between your read and your CAS, so the CAS succeeds even though the world changed underneath you. Here it cannot happen. `front` is monotonically increasing — it only ever moves forward. Once it advances past a value it never returns to it, so a thief reading `f` and CAS-ing `f → f + 1` is always safe. If the CAS succeeds, `front` really was still `f`.
+The initial load of front can be `relaxed` because the ordering work is done by the seq_cst fence immediately after it. The fence places that observation into the same global order used by:
+
+- the owner's fence
+- the owner's CAS
+- every thief CAS
+
+So the important synchronization comes from the fence, not from making the load acquire. The thief reads back with `acquire` so that if it observes the updated boundary, it is also guaranteed to observe the task data written before that store.
+
+The thief's fence and CAS join the same global order as the owner's operations. That means both sides reason about the last-item race using one shared timeline instead of unrelated local views.
 
 ---
 
-## Old buffers and why we never free them
+### Old buffers and why we never free them
 
 When `push_back` grows the buffer, the old one goes into `oldBuffer` and stays there for the lifetime of the deque:
 
@@ -309,7 +356,7 @@ The safe solution is to keep all old buffers alive. In our case the deque is own
 
 ---
 
-## The results
+### The results
 
 **Linux — /home** *(22 threads — hardware_concurrency | Clang + Ninja)*
 
@@ -339,12 +386,12 @@ The Linux number is the one that stands out. Nearly 3x faster than Part 3 and al
 
 Windows tells a cleaner story than Part 3 did. The warm runs are remarkably consistent — the cold run and warm mean are almost identical, which means the bottleneck is no longer the page cache or the mutex lottery but something predictable and steady. The lock-free steal path removed the variance that made Part 3's Windows numbers so noisy.
 
-It is also worth noting that Linux's cold run (2,815ms) is essentially the same as the warm mean (2,839ms). That is a sign the workload has shifted from I/O bound to CPU/allocation bound — the traversal is now fast enough that the page cache barely matters. The tree construction and memory allocation are the remaining bottleneck,not the filesystem reads.
+It is also worth noting that Linux's cold run (2,815ms) is essentially the same as the warm mean (2,839ms). That is a sign the workload has shifted from I/O bound to CPU/allocation bound — the traversal is now fast enough that the page cache influence appears much smaller than earlier versions, suggesting CPU-side costs now dominate. The tree construction and memory allocation are the remaining bottleneck,not the filesystem reads.
 
 
 ---
 
-## How far we have come
+### How far we have come
 
 | Version | Linux (warm) | Windows (warm) |
 |---|---|---|
@@ -363,9 +410,9 @@ Part 2 gave the biggest structural jump on Windows by introducing parallelism at
 
 
 
-## Further reading
+### Further reading
 
-I promised links and here they are. These are the resources that actually helped me understand this rather than just cargo-cult the memory orders:
+These are the resources I found most useful while learning lock-free programming and the C++ memory model:
 
 
 - **Scott Meyers** - [Cpu Caches and Why You Care](https://youtu.be/WDIkqP4JbkE?si=TDwcUloUJQt_nKZS)
