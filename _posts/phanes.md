@@ -79,7 +79,7 @@ Simple enough. For every directory it reads, it collects file metadata like size
 
 The problem shows up when you run it against a real filesystem. I benchmarked it on both Windows (C:\) and Linux (/home), doing a cold run first then five warm runs after the OS page cache was populated:
 
-**Windows — C:\\**
+**Windows — C:\\ | MSVC**
 
 | | |
 |---|---|
@@ -90,7 +90,7 @@ The problem shows up when you run it against a real filesystem. I benchmarked it
 | Warm mean | 65,204 ms|
 | Warm throughput | ~41,153 entries/s |
 
-**Linux — /home**
+**Linux — /home | Clang + Ninja**
 
 | | |
 |---|---|

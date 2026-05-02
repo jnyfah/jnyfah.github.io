@@ -116,7 +116,7 @@ If you want to browse the full code for this version, you can explore the reposi
 
 Here is how that plays out on the same machines from Part 1:
 
-**Linux — /home** *(22 threads- hardware_concurrency)*
+**Linux — /home** *(22 threads- hardware_concurrency | Clang + Ninja)*
 
 | | |
 |---|---|
@@ -128,7 +128,7 @@ Here is how that plays out on the same machines from Part 1:
 | Warm throughput | ~256,145 entries/s |
 | Speedup vs DFS Part 1 | **~1.56x** |
 
-**Windows — C:\\** *(32 threads - hardware_concurrency)*
+**Windows — C:\\** *(32 threads - hardware_concurrency | MSVC)*
 
 | | |
 |---|---|
