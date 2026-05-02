@@ -10,7 +10,7 @@ ogImage: '/assets/blog/threadpool.jpeg'
 
 ---
 
-In [Part 1](_posts\ThreadedMap.md), we introduced the idea of a thread-safe map that can handle concurrent reads and writes using mutexes. While this ensures data safety, one question remains:
+In [Part 1](/posts/ThreadedMap), we introduced the idea of a thread-safe map that can handle concurrent reads and writes using mutexes. While this ensures data safety, one question remains:
 
 *How do we efficiently execute tasks that interact with the map?*
 

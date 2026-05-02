@@ -12,7 +12,7 @@ ogImage:
 
 > Build Systems are tools used to automate the build process of projects while avoiding common build-related errors.
 
-To be honest, I have always been a fan of CMake 😂. I don't think I have ever used any other build tools for C++ except CMake. By the way, I recently wrote a blog about it. [Feel free to check it out!](_posts/cmake.md) 
+To be honest, I have always been a fan of CMake 😂. I don't think I have ever used any other build tools for C++ except CMake. By the way, I recently wrote a blog about it. [Feel free to check it out!](/posts/cmake) 
 
 sooo, we are changing that today!😏, for the past few weeks I have been trying out Bazel (a friend introduced me to it) and honestly its not bad atall, really impressive IMO.
  
