@@ -2,7 +2,7 @@
 title: 'Phanes: (Part 5 — Benchmarking)'
 excerpt: 'How do you know it is actually faster? You measure it properly'
 coverImage: '/assets/blog/benchmark.jpeg'
-date: '2026-05-07T11:37:01.491Z'
+date: '2026-05-06T11:37:01.491Z'
 author:
   name: Jennifer
   picture: '/assets/blog/authors/avatar.jpg'
@@ -48,9 +48,9 @@ Google Benchmark handles all of this. It runs each benchmark in a loop until it 
 
 The benchmark suite covers three distinct things:
 
-- **The lock-free deque itself** — push/pop throughput, and how it degrades under steal contention
-- **False sharing** — a direct comparison of packed vs padded atomics to validate the `alignas(64)` decision
-- **The builder** — thread overhead, task granularity, different tree shapes, and thread count scaling
+- **The lock-free deque itself** push/pop throughput, and how it degrades under steal contention
+- **False sharing** a direct comparison of packed vs padded atomics to validate the `alignas(64)` decision
+- **The builder** thread overhead, task granularity, different tree shapes, and thread count scaling
 
 Each category has a different goal. The deque benchmarks answer "is the data structure fast in isolation." The false sharing benchmark answers "does the hardware penalty we described actually show up in measurements." The builder benchmarks answer "how does the full system behave under different workloads."
 
@@ -251,7 +251,7 @@ static void BM_BuildTree_ThreadOverhead(benchmark::State& state)
 {
     const auto dirs = static_cast<int>(state.range(0));
     const auto root = make_unique_bench_path("phanes_bench_overhead");
-    create_flat_tree(root, dirs, 1); // 1 file per directory — minimal work
+    create_flat_tree(root, dirs, 1); // 1 file per directory,  minimal work
 
     for (auto _ : state)
         benchmark::DoNotOptimize(build_tree(root));
@@ -280,10 +280,10 @@ Linux thread overhead is around 0.7ms and barely grows with directory count, the
 
 ```cpp
 BENCHMARK(BM_BuildTree_Granularity)
-    ->Args({10, 200})   // 10 dirs, 200 files each — few tasks, lots of work per task
+    ->Args({10, 200})   // 10 dirs, 200 files each, few tasks, lots of work per task
     ->Args({100, 20})   // 100 dirs, 20 files each
-    ->Args({500, 4})    // 500 dirs, 4 files each — many tasks, little work per task
-    ->Args({1000, 2})   // 1000 dirs, 2 files each — maximum task count, minimum work
+    ->Args({500, 4})    // 500 dirs, 4 files each, many tasks, little work per task
+    ->Args({1000, 2})   // 1000 dirs, 2 files each, maximum task count, minimum work
 ```
 
 This sweeps across the same total file count with different distributions, few heavy tasks vs many light tasks. Work stealing is supposed to handle both well. If it does not, you will see the many-light-tasks case get significantly worse.
@@ -308,7 +308,7 @@ Four different filesystem shapes, each with roughly the same total entry count:
 ```cpp
 BM_BuildTree_Flat     // 100 dirs × 100 files, all at the same level
 BM_BuildTree_Nested   // 10×10 grid of subdirectories, 100 files each
-BM_BuildTree_Balanced // same as flat — sanity check
+BM_BuildTree_Balanced // same as flat sanity check
 BM_BuildTree_Skewed   // 1 heavy dir with 800 files + 100 light dirs with 2 files each
 ```
 
