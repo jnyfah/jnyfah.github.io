@@ -1,9 +1,8 @@
 ---
-title: 'non-cryptographic hash algorithm'
-excerpt: 'I tried to write my own non-cryptographic hash algorithm for a duplicate-file 
-finder, and learned about dependency chains, ILP and SIMD along the way.'
+title: 'Dependency Chains, ILP and SIMD: Building a Faster Hash'
+excerpt: 'But if you want some insight into how hash algorithms work and how to make them fast, stick around'
 coverImage: '/assets/blog/field1.jpeg'
-date: '2026-06-19T11:37:01.491Z'
+date: '2026-06-05T11:37:01.491Z'
 author:
   name: Jennifer
   picture: '/assets/blog/authors/avatar.jpg'
@@ -221,8 +220,8 @@ acc3 = mix(acc3, word3)  ──┘
 At the end of the loop we merge all four down into a single value before the finalize step:
 
 ```cpp
-uint64_t acc = rotate_left(v0, 1)  + rotate_left(v1, 7)
-             + rotate_left(v2, 12) + rotate_left(v3, 18);
+uint64_t acc = rotate_left(acc0, 1)  + rotate_left(acc1, 7)
+             + rotate_left(acc2, 12) + rotate_left(acc3, 18);
 ```
 
 One detail that matters: keep the accumulators in local variables, not in the struct. If they live as `acc[4]` and you read and write them every iteration, the compiler may reload from memory each time, which quietly serializes everything again.
@@ -246,57 +245,71 @@ The result:
 
 We now have four scalar accumulators doing the same operation independently. That is exactly what SIMD is designed for.
 
-SIMD stands for **Single Instruction, Multiple Data**. Instead of four separate 64-bit registers each running the same operation, you pack all four into one 256-bit register and run one instruction that operates on all four lanes at once:
+SIMD stands for **Single Instruction, Multiple Data**. The idea is simple: instead of running the same operation four times on four separate values, pack all four values into one wide register and run the operation once. One instruction, four results.
+
+On x86 with AVX2, the relevant types are:
+
+- `__m128i` - 128 bits: fits two 64-bit integers, or four 32-bit integers
+- `__m256i` - 256 bits: fits four 64-bit integers, or eight 32-bit integers
+- `__m512i` - 512 bits (AVX-512): fits eight 64-bit integers
+
+We want four 64-bit accumulators in one register, so we use `__m256i`. The CPU treats it as four independent 64-bit lanes, and an operation on a `__m256i` applies to all four lanes at once.
 
 ```text
-scalar:                     SIMD:
-v0 = mix(v0, w0)
-v1 = mix(v1, w1)   →    acc_vec = mix(acc_vec, w_vec)
-v2 = mix(v2, w2)        one instruction, four lanes
-v3 = mix(v3, w3)
+__m256i:  [ lane 0 | lane 1 | lane 2 | lane 3 ]   ← four 64-bit values
+            64-bit   64-bit   64-bit   64-bit
 ```
 
-???? THIS IS NOT A GOOD INTRO TO SIMD!!
-talk about m256i ?? or the other types and how you can divide it to suit your bits ???
-why do w eeven have the rotate left here, this whole sectuon is confusing
-- `__m256i` is a 256-bit type the CPU treats as four 64-bit integers. 
-- `_mm256_xor_si256` XORs all four lanes in one instruction. 
-- `_mm256_loadu_si256` loads 32 bytes from memory into one register. The rotate becomes lane-wide too — a left shift OR'd with a right shift:
+So instead of:
 
-```cpp
-static auto rotate_left(__m256i acc, int n) -> __m256i
-{
-    return _mm256_or_si256(
-        _mm256_slli_epi64(acc, n),
-        _mm256_srli_epi64(acc, 64 - n)
-    );
-}
+```text
+scalar:                      SIMD:
+acc0 = mix(acc0, w0)
+acc1 = mix(acc1, w1)   →    acc_vec = mix(acc_vec, w_vec)
+acc2 = mix(acc2, w2)        one instruction touches all four lanes
+acc3 = mix(acc3, w3)
 ```
 
-__ AVX2 has no native 64-bit multiply__
+The four scalar accumulators become one `__m256i`. The four scalar mix calls become one SIMD mix call. The ILP is still there — we still have four independent `__m256i` accumulators to avoid the dependency chain, but now each of those accumulators is operating on four 64-bit lanes at once instead of one.
 
-This is the tricky part. AVX2 gives you `_mm256_mul_epu32`, which multiplies the *low 32 bits* of each lane. There is no instruction to multiply two full 64-bit lanes. But our mix multiplies 64-bit values by 64-bit primes. So we have to build a 64-bit multiply from 32-bit pieces.
+Some of the intrinsics we use:
 
-?? doe it only give 32 bit?? what of 128?? why does it not give 64
+- `_mm256_loadu_si256` — load 32 bytes from memory into a `__m256i`
+- `_mm256_xor_si256` — XOR all four lanes simultaneously
+- `_mm256_slli_epi64` — shift left across all four 64-bit lanes
+- `_mm256_srli_epi64` — shift right across all four 64-bit lanes
 
-It is grade-school long multiplication in base 2³². Split each 64-bit value into a low half and high half, multiply the pieces, shift and add:
 
-??? confusing ....
-v * c = (v_lo * c_lo) + (v_lo * c_hi + v_hi * c_lo) * 2^32
-[ v_hi * c_hi * 2^64 overflows away, we discard it ]
+**AVX2 has no native 64-bit multiply**
+
+This is the most frustrating constraint. AVX2 gives you `_mm256_mul_epu32`, which multiplies 32-bit values and returns 64-bit results. It does not give you a 64-bit × 64-bit to 64-bit multiply at all, for any register width 64-bit SIMD multiply was simply never added to the instruction set (AVX-512 still doesn't have it either).
+
+But our `mix` multiplies 64-bit accumulators by 64-bit prime constants. So we have to build the 64-bit multiply ourselves out of the 32-bit pieces we do have.
+
+Think of it like multiplying two two-digit numbers by hand. To compute `37 × 52` you break it into `(30 + 7) × (50 + 2)` four partial products that you shift and add. Same idea here, except each "digit" is 32 bits wide instead of decimal. Split the value `v` and the constant `c` each into a low and high 32-bit half:
+
+```text
+v × c = (v_lo × c_lo)
+      + (v_lo × c_hi) × 2^32
+      + (v_hi × c_lo) × 2^32
+      + (v_hi × c_hi) × 2^64   ← overflows past 64 bits, discard it
+```
+
+We only keep the low 64 bits of the result, so the last term disappears. That leaves three 32-bit multiplies, two shifts, and two adds:
 
 ```cpp
 static auto mul64(__m256i v, __m256i c_lo, __m256i c_hi) -> __m256i
 {
     const __m256i mask32 = _mm256_set1_epi64x(0xFFFFFFFF);
 
-    __m256i v_lo = _mm256_and_si256(v, mask32);   // low  32 bits of v
-    __m256i v_hi = _mm256_srli_epi64(v, 32);      // high 32 bits of v
+    __m256i v_lo = _mm256_and_si256(v, mask32);  // low  32 bits of v
+    __m256i v_hi = _mm256_srli_epi64(v, 32);     // high 32 bits of v
 
-    __m256i ll   = _mm256_mul_epu32(v_lo, c_lo);  // low  × low
-    __m256i hl   = _mm256_mul_epu32(v_hi, c_lo);  // high × low
-    __m256i lh   = _mm256_mul_epu32(v_lo, c_hi);  // low  × high
+    __m256i ll = _mm256_mul_epu32(v_lo, c_lo);   // v_lo × c_lo
+    __m256i hl = _mm256_mul_epu32(v_hi, c_lo);   // v_hi × c_lo
+    __m256i lh = _mm256_mul_epu32(v_lo, c_hi);   // v_lo × c_hi
 
+    // shift the cross terms up by 32 and add them in
     __m256i cross = _mm256_slli_epi64(
                         _mm256_add_epi64(hl, lh), 32);
 
@@ -304,9 +317,10 @@ static auto mul64(__m256i v, __m256i c_lo, __m256i c_hi) -> __m256i
 }
 ```
 
-So a single `acc × PRIME` goes from one hardware instruction in the scalar version to roughly six vector instructions here. That is the cost of not having a native 64-bit multiply — and it is a big reason we never fully close the gap with xxHash. xxHash is designed around the multiply AVX2 *actually has*, while ours fights the instruction set.
+So one `acc × PRIME` that costs one instruction in the scalar version now costs roughly six vector instructions. That is the tax for fighting the
+instruction set 🥲. Yea xxhash has a better algorithm that escapes 64 bit multiplication 
 
-The mix with SIMD:
+The SIMD mix ties it all together:
 
 ```cpp
 static auto mix(__m256i acc, __m256i word,
@@ -320,6 +334,9 @@ static auto mix(__m256i acc, __m256i word,
 }
 ```
 
+Same three operations as the scalar mix - XOR, rotate, multiply, just operating on four 64-bit lanes at once.
+
+
 And the result:
 | Benchmark | Time | CPU | Iterations | bytes_per_second |
 | --- | --- | --- | --- | --- |
@@ -328,18 +345,18 @@ And the result:
 | BM_PhanesHash_12KB | 0.541 us | 0.541 us | 1271822 | 21.14 Gi/s |
 | BM_XXHash_12KB | 0.370 us | 0.370 us | 1888968 | 30.93 Gi/s |
 
-21 Gi/s — about 68% of xxHash, with a hash I wrote and actually understand.
+21 Gi/s about 68% of xxHash, with a hash I wrote and actually understand.
 
-The full journey: **7.45 → 18.14 → 21.01 Gi/s**.
+The full journey: **7.45 - 18.14 - 21.01 Gi/s**.
 
 ---
 
 ## But one thing though
 
-Don't let the Linux benchmark fool you into thinking this is close to xxHash, because on Windows my hash performs noticeably worse while xxHash stays consistent. There are cross-platform SIMD headaches I did not fully solve, and xxHash is a serious battle-tested library tuned by people who do this for a living.
+Don't let the Linux benchmark fool you into thinking this is close to xxHash, because on MSVC windows my hash performs noticeably worse about 11.7 Gi/s 😂 while xxHash stays consistent. There are cross-platform SIMD headaches I did not fully solve, and xxHash is a serious battle-tested library tuned by people who do this for a living. 🤪
 
-But that was the entire point not to win, but to actually understand *why* xxHash looks the way it does: why it uses multiple accumulators, why the constants are those specific numbers, why it leans on exactly the multiply the hardware gives you. Writing the slow version, then the four-accumulator version, then the SIMD version, and watching the number climb 7 → 18 → 21 Gi/s taught me more about how a CPU executes code than any amount of readingwould have.
+But that was the entire point not to win, but to actually understand *why* xxHash looks the way it does: why it uses multiple accumulators, why the constants are those specific numbers, why it leans on exactly the multiply the hardware gives you and learning !
 
-The full code — tail handling, streaming reset/update/digest API, the four-accumulator merge — is all in [Phanes](https://github.com/jnyfah/phanes).
+The full code is all in [Phanes](https://github.com/jnyfah/phanes).
 
 Next up I want to profile this with `perf` and watch the hardware counters either confirm or completely destroy my story about dependency chains and execution ports. 🙂
