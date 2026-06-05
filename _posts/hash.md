@@ -11,15 +11,17 @@ ogImage:
   url: '/assets/blog/field1.jpeg'
 ---
 
-I tried to write my own hash algorithm to beat [xxHash](https://github.com/Cyan4973/xxHash) 😂, joking! I was not trying to beat [xxHash](https://github.com/Cyan4973/xxHash) , I was just being ambitious and wanted to write my own. 
+I tried to write my own hash algorithm to beat [xxHash](https://github.com/Cyan4973/xxHash) and agshjfirjfunfiksbdybf 😂, joking! I was not trying to beat [xxHash](https://github.com/Cyan4973/xxHash), I was just being ambitious and wanted to write my own. 
 
 Did I beat [xxHash](https://github.com/Cyan4973/xxHash) ? Absolutely not, not even close. So if you are looking for a fast hash, just save yourself and use [xxHash](https://github.com/Cyan4973/xxHash). But if you want some insight into how hash algorithms work and how to make them fast, stick around.
 
 ---
 
-### Why am I even writing a hash?
+### Why am I even writing a hash algorithm?
 
-I decided to add one more feature to [Phanes](https://github.com/jnyfah/phanes), __finding duplicate files across a folder__. To do that I have to open, read, and compare files with one another. But imagine comparing 5GB files? That means reading 5GB of file A, then 5GB of file B, and comparing them byte by byte. And if we want to compare with file C and D and E... you can see where this is going. That takes a lot of memory and a lot of time.
+I decided to add one more feature to [Phanes](https://github.com/jnyfah/phanes), __finding duplicate files across a folder__. To do that I have to open, read, and compare files with one another. 
+
+But imagine comparing 5GB files? That means reading 5GB of file A, then 5GB of file B, and comparing them byte by byte. And if we want to compare with file C and D and E... you can see where this is going. That takes a lot of memory and a lot of time.
 
 The easy way out: hash each file down to a 64-bit integer. Comparison becomes trivial, just compare two numbers. We still have to read each file once, but only once, and we never have to hold two large files in memory at the same time.
 
@@ -30,7 +32,7 @@ Here is how the duplicate finder actually works. Given a folder of files:
 3. Re-group by hash - any group with fewer than two files, discard it
 4. Whatever groups remain are sets of duplicates
 
-The hash is the core of this. If the hash is fast, the whole thing is fast.
+The hash is the core of this. If the hash is fast, the whole thing is fast. (ignore I/O bound of reading files for now)
 
 So let's start what we have come here to do (in Fela Kuti's voice — drum roll 🥁) — **hashing files!**
 
@@ -38,7 +40,7 @@ So let's start what we have come here to do (in Fela Kuti's voice — drum roll 
 
 #### What even is a hash Algorithm?
 
-A hash algorithm takes arbitrary bytes and produces one fixed-size number. Here is the simplest possible version:
+A hash algorithm is an algorithm that takes arbitrary bytes and produces one fixed-size number. Here is the simplest possible version:
 
 ```cpp
 uint64_t bad_hash(const uint8_t* data, size_t len) {
@@ -163,17 +165,18 @@ Return `acc`. That is your hash.
 
 We have a correct hash now. Let's see how fast it is.
 
-Benchmark                   Time      CPU    Iterations  bytes_per_second
-BM_PhanesHash_1MB         131 us    131 us        3836       7.45 Gi/s
-BM_XXHash_1MB            30.6 us   30.6 us       22950      31.87 Gi/s
-BM_PhanesHash_12KB       2.21 us   2.21 us      336976       5.18 Gi/s
-BM_XXHash_12KB          0.364 us  0.364 us     1929866      31.45 Gi/s
+| Benchmark | Time | CPU | Iterations | bytes_per_second |
+| --- | --- | --- | --- | --- |
+| BM_PhanesHash_1MB | 131 us | 131 us | 3836 | 7.45 Gi/s |
+| BM_XXHash_1MB | 30.6 us | 30.6 us | 22950 | 31.87 Gi/s |
+| BM_PhanesHash_12KB | 2.21 us | 2.21 us | 336976 | 5.18 Gi/s |
+| BM_XXHash_12KB | 0.364 us | 0.364 us | 1929866 | 31.45 Gi/s |
 
 About 4x slower than xxHash. The reason is in the main loop. Look at the dependency between iterations:
 
-iteration 1: acc = mix(acc, word1)  - must finish before 2 starts
-iteration 2: acc = mix(acc, word2)  - depends on result of iteration 1
-iteration 3: acc = mix(acc, word3)  - depends on result of iteration 2
+- iteration 1: acc = mix(acc, word1)  - must finish before iteration 2 starts
+- iteration 2: acc = mix(acc, word2)  - depends on result of iteration 1
+- iteration 3: acc = mix(acc, word3)  - depends on result of iteration 2
 
 Every iteration is waiting for the previous one to complete because they all write to the same `acc`. The CPU cannot start work on `word2` until it has finished `word1`. Even though the CPU has multiple execution units sitting idle, it cannot use them. Each step is blocked on the last. This is called a dependency chain, and it is the critical path that limits our speed.
 
@@ -208,10 +211,12 @@ for (size_t i = 0; i + 32 <= len; i += 32)
 
 Each accumulator only ever touches itself:
 
+```text
 acc0 = mix(acc0, word0)  ──┐
 acc1 = mix(acc1, word1)  ──┤  no dependencies between these
 acc2 = mix(acc2, word2)  ──┤  CPU can run all four simultaneously
 acc3 = mix(acc3, word3)  ──┘
+```
 
 At the end of the loop we merge all four down into a single value before the finalize step:
 
@@ -220,36 +225,43 @@ uint64_t acc = rotate_left(v0, 1)  + rotate_left(v1, 7)
              + rotate_left(v2, 12) + rotate_left(v3, 18);
 ```
 
-One detail that matters: keep the accumulators in local variables, not in the struct. If they live as `acc[4]` and you read and write them every iteration, the compiler may reload from memory each time, which quietly serializes everything again. Load into locals at the top, work on locals in the hot loop, write back once at the end.
+One detail that matters: keep the accumulators in local variables, not in the struct. If they live as `acc[4]` and you read and write them every iteration, the compiler may reload from memory each time, which quietly serializes everything again.
+
+best is to load into locals at the top once, work on locals in the hot loop, write back once at the end.
 
 The result:
 
-Benchmark                   Time      CPU    Iterations  bytes_per_second
-BM_PhanesHash_1MB        53.9 us   53.8 us       12600      18.14 Gi/s
-BM_XXHash_1MB            31.5 us   31.5 us       21833      30.97 Gi/s
-BM_PhanesHash_12KB      0.642 us  0.642 us     1083936      17.83 Gi/s
-BM_XXHash_12KB          0.370 us  0.370 us     1888968      30.93 Gi/s
-
+| Benchmark | Time | CPU | Iterations | bytes_per_second |
+| --- | --- | --- | --- | --- |
+| BM_PhanesHash_1MB | 53.9 us | 53.8 us | 12600 | 18.14 Gi/s |
+| BM_XXHash_1MB | 31.5 us | 31.5 us | 21833 | 30.97 Gi/s |
+| BM_PhanesHash_12KB | 0.642 us | 0.642 us | 1083936 | 17.83 Gi/s |
+| BM_XXHash_12KB | 0.370 us | 0.370 us | 1888968 | 30.93 Gi/s |
 
 7.45 → 18.14 Gi/s. Same math, same number of multiplies. We just stopped making the CPU wait on itself.
 
 ---
 
-#### SIMD — one instruction, four lanes
+#### SIMD: one instruction, four lanes
 
 We now have four scalar accumulators doing the same operation independently. That is exactly what SIMD is designed for.
 
 SIMD stands for **Single Instruction, Multiple Data**. Instead of four separate 64-bit registers each running the same operation, you pack all four into one 256-bit register and run one instruction that operates on all four lanes at once:
 
+```text
 scalar:                     SIMD:
 v0 = mix(v0, w0)
 v1 = mix(v1, w1)   →    acc_vec = mix(acc_vec, w_vec)
 v2 = mix(v2, w2)        one instruction, four lanes
 v3 = mix(v3, w3)
+```
 
-`__m256i` is a 256-bit type the CPU treats as four 64-bit integers. 
-`_mm256_xor_si256` XORs all four lanes in one instruction. 
-`_mm256_loadu_si256` loads 32 bytes from memory into one register. The rotate becomes lane-wide too — a left shift OR'd with a right shift:
+???? THIS IS NOT A GOOD INTRO TO SIMD!!
+talk about m256i ?? or the other types and how you can divide it to suit your bits ???
+why do w eeven have the rotate left here, this whole sectuon is confusing
+- `__m256i` is a 256-bit type the CPU treats as four 64-bit integers. 
+- `_mm256_xor_si256` XORs all four lanes in one instruction. 
+- `_mm256_loadu_si256` loads 32 bytes from memory into one register. The rotate becomes lane-wide too — a left shift OR'd with a right shift:
 
 ```cpp
 static auto rotate_left(__m256i acc, int n) -> __m256i
@@ -261,12 +273,15 @@ static auto rotate_left(__m256i acc, int n) -> __m256i
 }
 ```
 
-### The complication — AVX2 has no native 64-bit multiply
+__ AVX2 has no native 64-bit multiply__
 
-This is the annoying part. AVX2 gives you `_mm256_mul_epu32`, which multiplies the *low 32 bits* of each lane. There is no instruction to multiply two full 64-bit lanes. But our mix multiplies 64-bit values by 64-bit primes. So we have to build a 64-bit multiply from 32-bit pieces.
+This is the tricky part. AVX2 gives you `_mm256_mul_epu32`, which multiplies the *low 32 bits* of each lane. There is no instruction to multiply two full 64-bit lanes. But our mix multiplies 64-bit values by 64-bit primes. So we have to build a 64-bit multiply from 32-bit pieces.
+
+?? doe it only give 32 bit?? what of 128?? why does it not give 64
 
 It is grade-school long multiplication in base 2³². Split each 64-bit value into a low half and high half, multiply the pieces, shift and add:
 
+??? confusing ....
 v * c = (v_lo * c_lo) + (v_lo * c_hi + v_hi * c_lo) * 2^32
 [ v_hi * c_hi * 2^64 overflows away, we discard it ]
 
@@ -306,11 +321,12 @@ static auto mix(__m256i acc, __m256i word,
 ```
 
 And the result:
-Benchmark                   Time      CPU    Iterations  bytes_per_second
-BM_PhanesHash_1MB        46.5 us   46.5 us       15252      21.01 Gi/s
-BM_XXHash_1MB            31.5 us   31.5 us       21833      30.97 Gi/s
-BM_PhanesHash_12KB      0.541 us  0.541 us     1271822      21.14 Gi/s
-BM_XXHash_12KB          0.370 us  0.370 us     1888968      30.93 Gi/s
+| Benchmark | Time | CPU | Iterations | bytes_per_second |
+| --- | --- | --- | --- | --- |
+| BM_PhanesHash_1MB | 46.5 us | 46.5 us | 15252 | 21.01 Gi/s |
+| BM_XXHash_1MB | 31.5 us | 31.5 us | 21833 | 30.97 Gi/s |
+| BM_PhanesHash_12KB | 0.541 us | 0.541 us | 1271822 | 21.14 Gi/s |
+| BM_XXHash_12KB | 0.370 us | 0.370 us | 1888968 | 30.93 Gi/s |
 
 21 Gi/s — about 68% of xxHash, with a hash I wrote and actually understand.
 
