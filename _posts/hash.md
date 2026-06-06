@@ -1,5 +1,5 @@
 ---
-title: 'Dependency Chains, ILP and SIMD: Building a Faster Hash'
+title: 'Dependency Chains, ILP and SIMD: Building a Fast Hash'
 excerpt: 'But if you want some insight into how hash algorithms work and how to make them fast, stick around'
 coverImage: '/assets/blog/field1.jpeg'
 date: '2026-06-05T11:37:01.491Z'
@@ -226,7 +226,7 @@ uint64_t acc = rotate_left(acc0, 1)  + rotate_left(acc1, 7)
 
 One detail that matters: keep the accumulators in local variables, not in the struct. If they live as `acc[4]` and you read and write them every iteration, the compiler may reload from memory each time, which quietly serializes everything again.
 
-best is to load into locals at the top once, work on locals in the hot loop, write back once at the end.
+Load them into local variables at the top of the function, work on locals throughout the hot loop, and write back to the struct once at the end.
 
 The result:
 
@@ -317,8 +317,16 @@ static auto mul64(__m256i v, __m256i c_lo, __m256i c_hi) -> __m256i
 }
 ```
 
-So one `acc × PRIME` that costs one instruction in the scalar version now costs roughly six vector instructions. That is the tax for fighting the
-instruction set 🥲. Yea xxhash has a better algorithm that escapes 64 bit multiplication 
+
+
+
+So one `acc × PRIME` that costs one instruction in the scalar version now costs roughly six vector instructions here. That is the tax for building an algorithm around 64-bit multiplication and then trying to lift it to a CPU that does not have it 🥲.
+
+This is also where xxHash3 pulls away. Looking at its AVX2 source, the mixing in the SIMD path is entirely different from its scalar path, no prime multiplication at all. Instead it XORs the input against a secret key, then uses `_mm256_mul_epu32` directly on the two 32-bit halves of each lane. 
+
+The whole operation is XOR, shift, 32-bit multiply, add. It never needs a 64-bit multiply because the algorithm was designed from the start around what the hardware actually gives you cheaply.
+
+We built our hash inspired by xxHash64's scalar design and inherited its constraints when moving to SIMD. xxHash3 was written natively for the instruction set from day one.
 
 The SIMD mix ties it all together:
 
