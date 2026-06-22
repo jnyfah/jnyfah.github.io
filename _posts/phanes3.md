@@ -1,5 +1,5 @@
 ---
-title: 'Phanes: (Part 3 — Work Stealing)'
+title: 'Phanes: (Part 3 - Work Stealing)'
 excerpt: 'Per-thread queues, load imbalance, and stealing from your neighbours'
 coverImage: '/assets/blog/worksteal.jpeg'
 date: '2026-04-23T11:37:01.491Z'

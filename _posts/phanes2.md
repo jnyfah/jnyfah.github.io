@@ -1,5 +1,5 @@
 ---
-title: 'Phanes: (Part 2 — The Thread Pool)'
+title: 'Phanes: (Part 2 - The Thread Pool)'
 excerpt: 'Parallel traversal, a shared queue, and the mutex tax'
 coverImage: '/assets/blog/threading.jpeg'
 date: '2026-04-21T11:37:01.491Z'

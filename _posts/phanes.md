@@ -1,5 +1,5 @@
 ---
-title: 'Phanes: (Part 1 — The DFS)'
+title: 'Phanes: (Part 1 - The DFS)'
 excerpt: 'I was bored, and needed an excuse to use C++23'
 coverImage: '/assets/blog/preset.jpeg'
 date: '2026-04-17T11:37:01.491Z'

@@ -1,5 +1,5 @@
 ---
-title: 'Phanes: (Part 4 — Lock-Free)'
+title: 'Phanes: (Part 4 - Lock-Free)'
 excerpt: 'Removing the last locks, one memory order at a time'
 coverImage: '/assets/blog/lockfree.jpeg'
 date: '2026-05-01T11:37:01.491Z'
