@@ -105,7 +105,7 @@ Perf numbers for steal contention vs the keep-all baseline:
 
 | Metric | keep-all | HP | Note |
 |---|---|---|---|
-| StealContention thread | 5.23% | 4.73% | HP slightly worse |
+| StealContention thread | 5.23% | 4.73% | Keep all slightly worse |
 | StealContention itself | 1.87% | 2.62% | HP worse |
 | push_back | 0.87% | 0.72% | |
 
@@ -203,21 +203,44 @@ __Which one for Phanes?__
 EBR. It's cheaper than HP on both the steal path and the owner path, it actually frees memory unlike the original approach, and the missing formal lock-freedom guarantee for reclamation doesn't matter for a fixed bounded thread pool.
 The keep-all approach is still totally valid for this specific deque — resizes are rare and old buffer memory is bounded. But if you want correct reclamation without paying the HP fence tax, EBR is the right call
 
-why is EBR cheaper ??? on the hp steal path 
+__But wait, why is EBR cheaper?__
+
+This surprised me at first, because if you count the operations on the steal path they look almost identical.
+
+HP steal path:
+
 1. store buf to slot (atomic write)
 2. seq_cst fence
 3. reload buffer to validate (atomic read)
 4. compare old vs new
 5. on exit: store null to slot (atomic write)
 
-total: 2 atomic writes + 1 atomic read + 1 fence + 1 comparison
+> total: 2 atomic writes + 1 atomic read + 1 fence + 1 comparison
 
-on ebr steal path 
+EBR steal path:
+
 1. load global_epoch (atomic read)
 2. store epoch to slot (atomic write)
 3. seq_cst fence
 4. load buffer (atomic read)
 5. on exit: store kInactive to slot (atomic write)
 
-total: 2 atomic writes + 2 atomic reads + 1 fence
+> total: 2 atomic writes + 2 atomic reads + 1 fence
 
+So EBR actually does *one more* atomic read, and yet it wins. The instruction count isn't the whole story.
+
+The difference is what those operations mean. HP's reload-and-compare is a *conditional* check, if the buffer changed under you between the publish and the reload, you have to bail out and retry the whole protection sequence. That's a control dependency on the steal path so every thief has to publish, fence, then read back and branch on the result, and occasionally loop while EBR's reads have no such dependency. 
+
+So for Phanes: __EBR__. Cheaper on the steal path, free on the owner path, and it actually reclaims memory. 
+
+But that's the thing, __EBR is not the universal answer__. It won here because of what Phanes *is*: a bounded thread pool where threads enter and leave their critical sections quickly and never hang forever, and where reclamation only happens on rare resizes, because if threads can stall arbitrarily inside a critical region, EBR's epoch can't advance and memory just piles up.
+
+So the real takeaway isn't "EBR beats HP." It's that the right reclamation scheme falls out of the structure of the lock-free thing you're building, how long critical sections last, how many threads there are, whether they're bounded, and how often you reclaim. This means benchmark your own workload 🫵🏽, the answer lives in your access pattern.
+
+Full Code at [Phanes-deque.cpp](https://github.com/jnyfah/phanes/blob/main/src/builder/deque.cpp)
+
+### Further reading
+
+- **Jeffrey Mendelsohn** - [Introduction to Epoch-Based Memory Reclamation](https://www.youtube.com/watch?v=KHVEiSHaEDQ)
+-  [Applying Hazard Pointers to More Concurrent Data Structures](https://jhyeon.kim/papers/spaa23.pdf)
+- **Manuel Pöter** [Effective Memory Reclamation](https://github.com/mpoeter/emr)
