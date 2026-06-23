@@ -18,7 +18,7 @@ When the deque grows and needs a bigger buffer, a new buffer is allocated and ev
 
 Why? Because a thief could be mid-steal, holding a pointer to that old buffer, and if deleted that's undefined behaviour. 
 
-So the easy solution was: don't delete it at all, stack all old buffers into a vector and let the destructor clean them up at end of the program.
+So the easy solution was: don't delete it at all, stack all old buffers in a vector and let the destructor clean them up at end of the program.
 
 ```cpp
 if (b - f >= buf->capacity)
@@ -103,10 +103,10 @@ auto try_free(Buffer* buf) -> bool
 
 Perf numbers for steal contention vs the keep-all baseline:
 
-| Metric | keep-all | HP | Note |
+| Metric | keep-all | HP |
 |---|---|---|---|
-| StealContention thread | 5.23% | 4.73% | Keep all slightly worse |
-| StealContention itself | 1.87% | 2.62% | HP worse |
+| StealContention thread | 5.23% | 4.73% |
+| StealContention itself | 1.87% | 2.62% |
 | push_back | 0.87% | 0.72% | |
 
 Hazard pointers is actually slightly worse than the keep-all approach on steal contention, this makes sense as every steal now pays for two extra atomic writes (publish + clear) plus the fence + validate. 
@@ -237,7 +237,7 @@ So for Phanes: __EBR__. Cheaper on the steal path, free on the owner path, and i
 
 But that's the thing, __EBR is not the universal answer__. It won here because of what Phanes *is*: a bounded thread pool where threads enter and leave their critical sections quickly and never hang forever, and where reclamation only happens on rare resizes, because if threads can stall arbitrarily inside a critical region, EBR's epoch can't advance and memory just piles up.
 
-So the real takeaway isn't "EBR beats HP." It's that the right reclamation scheme falls out of the structure of the lock-free thing you're building, how long critical sections last, how many threads there are, whether they're bounded, and how often you reclaim. This means benchmark your own workload 🫵🏽, the answer lives in your access pattern.
+So the real takeaway isn't "EBR beats HP." It's that the right reclamation scheme falls out of the structure of the lock-free thing you're building, how long critical sections last, how many threads there are, whether they're bounded, and how often you reclaim. So benchmark your own workload 🫵🏽, the answer lives in your access pattern.
 
 Full Code at [Phanes-deque.cpp](https://github.com/jnyfah/phanes/blob/main/src/builder/deque.cpp)
 
