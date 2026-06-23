@@ -46,19 +46,19 @@ Lock-Free Objects](https://www.cs.otago.ac.nz/cosc440/readings/hazard-pointers.p
 The core idea is a global table for each deque, one row per thread, one column per hazard pointer. 
 ![AND Gate](/assets/blog/hazard-pointer-table.png)
 
-When a thief is about to dereference a buffer pointer, it writes that address to its own row in the table. 
+ When a thief is about to steal from a buffer, it writes the address of that buffer to its own row in the table to say "Hey i am accessing this buffer"
 
-When it's done, it clears it. The owner, before freeing an old buffer, scans the table and if any row contains the address of the buffer we want to free, we defer, otherwise, free it.
+When it's done stealing, it sets the row to null. The owner, before freeing an old buffer, scans the table and if any row contains the address of the buffer we want to free, we defer, otherwise, free it.
 
-There's one subtle catch tho, the thief has to publish its pointer on the shared table and then validate that the buffer is still valid before actually using it, Because there's a race window between **_read pointer_** and **_publish it_** where the owner could have already scanned and decided nobody holds it:
+There's one subtle catch tho, the thief has to validate that the buffer is still valid  after writing the address to the table before actually using it, Because there's a race window between **_read pointer_** and **_publish it_** where the owner could have already scanned and decided nobody holds it:
 
 ```cpp
 auto* buf = buffer.load(std::memory_order_relaxed);
 
-HazardGuard guard(domain.slots[id], buf);   // publish
+HazardGuard guard(domain.slots[id], buf);   // write to table
 std::atomic_thread_fence(std::memory_order_seq_cst);
 
-// validate, did the buffer change while we were publishing?
+// validate, did the buffer change while we were trying to write to table?
 if (buffer.load(std::memory_order_acquire) != buf)
 {
     return std::nullopt;
@@ -227,9 +227,11 @@ EBR steal path:
 
 > total: 2 atomic writes + 2 atomic reads + 1 fence
 
-So EBR actually does *one more* atomic read, and yet it wins. The instruction count isn't the whole story.
+So EBR actually does one more atomic read, and yet it wins. The instruction count alone clearly doesn't explain the result.
 
-The difference is what those operations mean. HP's reload-and-compare is a *conditional* check, if the buffer changed under you between the publish and the reload, you have to bail out and retry the whole protection sequence. That's a control dependency on the steal path so every thief has to publish, fence, then read back and branch on the result, and occasionally loop while EBR's reads have no such dependency. 
+The most visible difference in this deque is that HP has a validate-after-publish step: after publishing the buffer pointer, the thief has to reload buffer and check that it still matches, potentially retrying if a resize raced with the publication. EBR has no equivalent pointer-validation step, once the thread pins an epoch, it can load the buffer directly.
+
+My current belief is that this extra reload/compare/retry path is what makes HP slower in this workload, but I have not yet confirmed that with hardware-counter profiling. So treat this as an explanation of the likely cause, not a formal proof.😏
 
 So for Phanes: __EBR__. Cheaper on the steal path, free on the owner path, and it actually reclaims memory. 
 
