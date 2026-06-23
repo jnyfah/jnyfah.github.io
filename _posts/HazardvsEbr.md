@@ -2,7 +2,7 @@
 title: 'Safe Memory Reclamation for Lock-Free Deques: Hazard Pointers vs EBR'
 excerpt: 'Because a thief could be mid-steal, holding a pointer to that old buffer, and if we delete it thats undefined behaviour'
 coverImage: '/assets/blog/lockfree-buffer.jpeg'
-date: '2026-06-19T11:37:01.491Z'
+date: '2026-06-23T11:37:01.491Z'
 author:
   name: Jennifer
   picture: '/assets/blog/authors/avatar.jpg'
