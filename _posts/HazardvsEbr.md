@@ -50,7 +50,7 @@ The core idea is a global table for each deque, one row per thread, one column p
 
 When it's done stealing, it sets the row to null. The owner, before freeing an old buffer, scans the table and if any row contains the address of the buffer we want to free, we defer, otherwise, free it.
 
-There's one subtle catch tho, the thief has to validate that the buffer is still valid  after writing the address to the table before actually using it, Because there's a race window between **_read pointer_** and **_publish it_** where the owner could have already scanned and decided nobody holds it:
+There's one subtle catch tho, the thief has to validate that the buffer is still valid  after writing the address to the table before actually using it, because there's a race window between **_read pointer_** and **_publish it_** where the owner could have already scanned and decided nobody holds it:
 
 ```cpp
 auto* buf = buffer.load(std::memory_order_relaxed);
@@ -104,7 +104,7 @@ auto try_free(Buffer* buf) -> bool
 Perf numbers for steal contention vs the keep-all baseline:
 
 | Metric | keep-all | HP |
-|---|---|---|---|
+|---|---|---|
 | StealContention thread | 5.23% | 4.73% |
 | StealContention itself | 1.87% | 2.62% |
 | push_back | 0.87% | 0.72% | |
@@ -200,8 +200,9 @@ __Which one for Phanes?__
 | reclamation lock-free | — | yes | no |
 
 
-EBR. It's cheaper than HP on both the steal path and the owner path, it actually frees memory unlike the original approach, and the missing formal lock-freedom guarantee for reclamation doesn't matter for a fixed bounded thread pool.
-The keep-all approach is still totally valid for this specific deque — resizes are rare and old buffer memory is bounded. But if you want correct reclamation without paying the HP fence tax, EBR is the right call
+**EBR!!**, it's cheaper than HP on both the steal path and the owner path, it actually frees memory unlike the original approach, and the missing formal lock-freedom guarantee for reclamation doesn't matter for a fixed bounded thread pool.
+
+The keep-all approach is still totally valid for this specific deque since resizes are rare and old buffer memory is bounded, but if we want correct reclamation without paying the HP fence tax, EBR is the right call
 
 __But wait, why is EBR cheaper?__
 
@@ -233,9 +234,7 @@ The most visible difference in this deque is that HP has a validate-after-publis
 
 My current belief is that this extra reload/compare/retry path is what makes HP slower in this workload, but I have not yet confirmed that with hardware-counter profiling. So treat this as an explanation of the likely cause, not a formal proof.😏
 
-So for Phanes: __EBR__. Cheaper on the steal path, free on the owner path, and it actually reclaims memory. 
-
-But that's the thing, __EBR is not the universal answer__. It won here because of what Phanes *is*: a bounded thread pool where threads enter and leave their critical sections quickly and never hang forever, and where reclamation only happens on rare resizes, because if threads can stall arbitrarily inside a critical region, EBR's epoch can't advance and memory just piles up.
+But one thing, __EBR is not the universal answer__. It won here because of what Phanes *is*: a bounded thread pool where threads enter and leave their critical sections quickly and never hang forever, and where reclamation only happens on rare resizes, because if threads can stall arbitrarily inside a critical region, EBR's epoch can't advance and memory just piles up.
 
 So the real takeaway isn't "EBR beats HP." It's that the right reclamation scheme falls out of the structure of the lock-free thing you're building, how long critical sections last, how many threads there are, whether they're bounded, and how often you reclaim. So benchmark your own workload 🫵🏽, the answer lives in your access pattern.
 
