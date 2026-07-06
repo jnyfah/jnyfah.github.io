@@ -12,11 +12,11 @@ ogImage:
 
 
 
-So a while back I built a [lock-free work-stealing deque](/posts/phanes4.md) and it works perfectly, thieves steal from the front, owner pushes and pops from the back, all lock-free, all good. But there was one thing I quietly swept under the rug, __memory reclamation__ 😬.
+Memory reclamation is not something I thought I would ever do for my [lock-free work-stealing deque](/posts/phanes4.md) but here we are 😬
 
-When the deque grows and needs a bigger buffer, a new buffer is allocated and everything is copied over, but the old buffer is not deleted immediately.
+So currently, when the deque grows and needs a bigger buffer, a new buffer is allocated and everything is copied over, but the old buffer is not deleted immediately.
 
-Why? Because a thief could be mid-steal, holding a pointer to that old buffer, and if deleted that's undefined behaviour. 
+Well because a thief could be mid-steal, holding a pointer to that old buffer, and if deleted that's undefined behavior. 
 
 So the easy solution was: don't delete it at all, stack all old buffers in a vector and let the destructor clean them up at end of the program.
 
@@ -44,9 +44,9 @@ Lock-Free Objects](https://www.cs.otago.ac.nz/cosc440/readings/hazard-pointers.p
 > A hazard pointer is a published reference to an object that must not be reclaimed yet. The reference is "hazardous" because, without protection, another thread could free the object and leave the reference dangling
 
 The core idea is a global table for each deque, one row per thread, one column per hazard pointer. 
-![AND Gate](/assets/blog/hazard-pointer-table.png)
+![hazard-pointer-table.](/assets/blog/hazard-pointer-table.png)
 
- When a thief is about to steal from a buffer, it writes the address of that buffer to its own row in the table to say "Hey i am accessing this buffer"
+When a thief is about to steal from a buffer, it writes the address of that buffer to its own row in the table to say "Hey i am accessing this buffer"
 
 When it's done stealing, it sets the row to null. The owner, before freeing an old buffer, scans the table and if any row contains the address of the buffer we want to free, we defer, otherwise, free it.
 
