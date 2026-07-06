@@ -18,11 +18,11 @@ Did I beat [xxHash](https://github.com/Cyan4973/xxHash) ? Absolutely not, not ev
 
 ### Why am I even writing a hash algorithm?
 
-I decided to add one more feature to [Phanes](https://github.com/jnyfah/phanes), __finding duplicate files across a folder__. To do that I have to open, read, and compare files with one another. 
+I decided to add one more feature to [Phanes](https://github.com/jnyfah/phanes), __finding duplicate files across a folder__, and to do that I have to open, read, and compare files with one another. 
 
-But imagine comparing 5GB files? That means reading 5GB of file A, then 5GB of file B, and comparing them byte by byte. And if we want to compare with file C and D and E... you can see where this is going. That takes a lot of memory and a lot of time.
+But imagine comparing 5GB files? That means reading 5GB of file A, then 5GB of file B, and comparing them byte by byte. And if we want to compare with file C and D and E... you can see where this is going, it takes a lot of memory and a lot of time.
 
-The easy way out: hash each file down to a 64-bit integer. Comparison becomes trivial, just compare two numbers. We still have to read each file once, but only once, and we never have to hold two large files in memory at the same time.
+One way to make this easier would be hash each file down to a 64-bit integer, then comparison becomes trivial, just compare two numbers, tho we still have to read each file, but only once, and we never have to hold two large files in memory at the same time.
 
 Here is how the duplicate finder actually works. Given a folder of files:
 
