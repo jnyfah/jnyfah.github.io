@@ -12,6 +12,10 @@
   @apply text-blue-500 hover:text-blue-700;
 }
 
+.markdown img {
+  @apply max-w-full h-auto;
+}
+
 .markdown code,
 .markdown pre,
 .markdown pre > code {
@@ -112,7 +116,12 @@
 }
 
 .markdown table {
-  @apply table-auto border-collapse w-full text-left text-sm;
+  @apply border-collapse text-left text-sm;
+  /* size to content but never overflow the page: scroll inside its own box */
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .markdown th,
