@@ -10,7 +10,7 @@ ogImage:
   url: '/assets/blog/uring.jpeg'
 ---
 
-A while back I added duplicates as an addon feature for my toy project [Phanes](https://github.com/jnyfah/phanes) mainly because I wanted to play around with writing my own hash algorithm which I would say I succeeded in I guess 😏
+A while back I added duplicates file finder as an addon feature for my toy project [Phanes](https://github.com/jnyfah/phanes) mainly because I wanted to play around with writing my own hash algorithm which I'd say I succeeded at... I guess 😏
 
 A quick overview of how the file duplicate detection works, because the problem is what motivates the solution.
 
@@ -39,7 +39,7 @@ There are older answers, and each has a catch.
 io_uring is different in three ways that matter here:
 
 - It's **completion-based**, not readiness-based, and it works for regular file reads, the exact thing `epoll` can't do.
-- It's a **shared-memory ring** between your program and the kernel. Requests and completions live in memory both sides can see, so submitting work doesn't need a syscall per operation depending on your design.
+- It's a **shared-memory ring** between your program and the kernel. Requests and completions live in memory both sides can see, so submitting work doesn't necessarily require a syscall per operation.
 - It **batches**: queue up F1..F20 and hand them all to the kernel in one go (or, with polling modes, in zero syscalls). The thread stops waiting on one file and starts waiting on the whole batch, and the thread can even go prepare the next batch while the kernel works.
 
 Most of the mechanics below follow the [kernel docs](https://man7.org/linux/man-pages/man7/io_uring.7.html) and [io_uring By Example by Shuveb Hussain](https://unixism.net/2020/04/io-uring-by-example-article-series/), which is worth reading for more depth.
