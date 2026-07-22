@@ -50,13 +50,12 @@ That's it, that is the whole thing! 😅.
 
 The shared memory still exists, the kernel still maps the queues into your address space, because i mean, that's the entire point of a ring but for windows you'll never see it. 
 
-`CreateIoRing` initializes an `HIORING` handle that represents the ring, and every interaction with the ring goes through API functions that take this `handle`. You never see the underlying queues: no offsets, no `mmap`, no pointer wiring, and no way to reach into the ring directly even if you wanted to.
+`CreateIoRing` creates the ring and writes a `HIORING` opaque handle into the output parameter. That handle represents the ring, and every interaction with the ring goes through API functions that take it. You never see the underlying queues: no offsets, no `mmap`, no pointer wiring, and no way to reach into the ring directly even if you wanted to.
 
-- **`IORING_VERSION_3`** The version tells Windows which feature set of I/O Rings you want to use. Version 1 could only read while write and flush came in later versions, and the enum goes up to IORING_VERSION_4 and counting as of this post. Older versions remain valid while newer versions add capabilities.
-- **Separate SQ and CQ sizes** Windows lets you choose both queue capacities when creating the ring. Linux takes your requested submission queue size, then calculates the final queue sizes internally and reports them back through `io_uring_params`.
+- **`IORING_VERSION_3:`** The version tells Windows which feature set of I/O Rings you want to use. Version 1 could only read while write and flush came in later versions, and the enum goes up to IORING_VERSION_4 and counting as of this post. Older versions remain valid while newer versions add capabilities.
+- **Separate SQ and CQ sizes:** Windows lets you choose both queue capacities when creating the ring. Linux takes your requested submission queue size, then calculates the final queue sizes internally and reports them back through `io_uring_params`.
 
-#### Submitting: filling the SQE vs asking nicely
-
+#### Submitting:
 On Linux, submitting meant doing everything by hand: read the tail, mask it into an index, `memset` the SQE, fill seven fields, poke the indirection array, then publish the tail with a release store so the kernel sees a complete SQE before it sees the new tail, a lot if work!!, unless ofcourse you are using liburing.
 
 But on Windows:
@@ -90,7 +89,7 @@ Since `BuildIoRingReadFile` does not take a HANDLE or a raw pointer directly, we
 
 One thing does change on the caller's side. On Linux the SQ-full check compared the tail against the kernel's head reading shared state directly, with an acquire load. You can't do that when you can't see the head, so the Windows version just counts locally: `pending >= sq_entries` means stop. Cruder but works 🙂.
 
-#### Submit-and-wait: enter vs Submit
+#### Enter vs Submit
 
 On linux, the design folded submitting and waiting into one syscall, `io_uring_enter(fd, to_submit, min_complete, IORING_ENTER_GETEVENTS)`. Windows has the same fold:
 
@@ -101,7 +100,7 @@ HRESULT s = ::SubmitIoRing(handle, waitOperations, timeoutMs, &submitted);
 
 - `waitOperations` is `min_complete` with a different name, and there's a timeout parameter thrown in.
 - **No `to_submit`**  here, `SubmitIoRing` hands the kernel *everything* queued, no partial submission. Which also kills a whole failure mode from last time where i did `pending -= ret`, because Linux could accept fewer SQEs than you offered and you had to track the remainder yourself. On Windows it's just `pending = 0` after every submit. One less thing to worry about 🤷🏾‍♀️.
-- **HRESULT, not errno.** Of course 😌.
+- **HRESULT, not errno.** Of course.
 
 #### Reaping:
 
@@ -146,16 +145,18 @@ The structure of the loop is recognizably the same design: if something's ready,
 
 #### Where did all the acquire/release go?
 
-For [linux iouring blog](/posts/uring), an entire section was about memory ordering, and the rule behind it: *who owns which pointer*. Acquire on the pointers the kernel writes, release on the pointers you write, because user and the kernel are touching the same memory and someone has to keep the writes ordered.
+For [linux iouring blog](/posts/uring), an entire section was about memory ordering, and the rule behind it: *who owns which pointer*. Acquire on the pointers the kernel writes, release on the pointers you write, because you (the user) and the kernel are touching the same memory and someone has to keep the writes ordered.
 
-That section has no Windows equivalent. Not because the problem went away, the shared queues still have heads and tails and the same ordering requirements but because you can't touch them. `BuildIoRingReadFile` publishes the tail, `PopIoRingCompletion` advances the head, and whatever fences that any requires are inside functions Microsoft owns. The whole game from last time is still being played, just not by you.
+That section has no Windows equivalent. Not because the problem went away, the shared queues still have heads and tails and the same ordering requirements but because you can't touch them. 
+
+`BuildIoRingReadFile` publishes the tail, `PopIoRingCompletion` advances the head, and whatever fences that any requires are inside functions Microsoft owns. The whole game from last time is still being played, just not by you.
 
 And that's most of the trade in one sentence. 
 
-The Linux design trusts you with the ring and in exchange you must understand release/acquire or corrupt the queue. The Windows design keeps the ring and in exchange you get an API that is very hard to use wrong and nothing to learn from 😂. 
+The Linux design trusts you with the ring and in exchange you must understand memory ordering or corrupt the queue. The Windows design keeps the ring and in exchange you get an API that is very hard to use wrong and nothing to learn from 😂. 
 
 If part one taught you anything, it's *because* Linux made you do it. 😏
 
-[Full code oring.cpp](https://github.com/jnyfah/phanes/blob/main/src/io/oring.cpp), and `uring.cpp` from last time is right next to it.
+[Full code at oring.cpp](https://github.com/jnyfah/phanes/blob/main/src/io/oring.cpp), and `uring.cpp` from last time is right next to it.
 
 Is the Windows one less fun to write? Yes! 🌚. Was it done in an afternoon because part one already forced me to understand what a ring *is*? Also yes. Do the hard version first, the easy version becomes obvious.
