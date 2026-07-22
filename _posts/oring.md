@@ -1,6 +1,6 @@
 ---
 title: 'io_uring vs IoRing'
-excerpt: 'Windows 11 has its own completion-based I/O ring, openly modeled on io_uring. Same mental model, very different amount of trust in you'
+excerpt: 'The Windows design keeps the ring and in exchange you get an API that is very hard to misuse'
 coverImage: '/assets/blog/ooring.jpeg'
 date: '2026-07-22T18:22:41.000Z'
 author:
@@ -153,7 +153,7 @@ That section has no Windows equivalent. Not because the problem went away, the s
 
 And that's most of the trade in one sentence. 
 
-The Linux design trusts you with the ring and in exchange you must understand memory ordering or corrupt the queue. The Windows design keeps the ring and in exchange you get an API that is very hard to use wrong and nothing to learn from 😂. 
+The Linux design trusts you with the ring and in exchange you must understand memory ordering or corrupt the queue. The Windows design keeps the ring and in exchange you get an API that is very hard to misuse and nothing to learn from 😂. 
 
 If part one taught you anything, it's *because* Linux made you do it. 😏
 
