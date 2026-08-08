@@ -27,7 +27,7 @@ Look at it this way: `thread A` grabs a group, picks the first file `F1`, opens 
 
 Now imagine a 500MB group of about 100 files. Spreading files across threads does help, but every thread you add is another one sitting blocked, and you need a lot of them before the disk is busy. You just pay for it with more threads (stacks, scheduling, context switches) while each thread still blocks on its own read.
 
-> The question is: how do you ask the kernel to handle massive amounts of I/O concurrently without blocking the thread that asked?
+> How do you ask the kernel to handle massive amounts of I/O concurrently without blocking the thread that asked?
 
 ---
 There are older answers, and each has a catch.
@@ -35,7 +35,7 @@ There are older answers, and each has a catch.
 - **`epoll`** is readiness-based: it tells you when a socket is ready to read without blocking, which is great for network sockets and useless for regular files, because a disk file is always "ready", so `epoll` never helps you overlap disk reads.
 - **POSIX AIO** exists but it's clunky and often just a thread pool underneath.
 
-io_uring is different in three ways that matter here:
+io_uring is different:
 - It's **completion-based**, not readiness-based, and it works for regular file reads, the exact workload where epoll provides no useful I/O overlap.
 - It's a **shared-memory ring** between your program and the kernel. Requests and completions live in memory both sides can see, so submitting work doesn't necessarily require a syscall per operation.
 - It **batches**: queue up F1..F20 and hand them all to the kernel in one go (or, with polling modes, in zero syscalls). The thread stops waiting on one file and starts waiting on the whole batch, and the thread can even go prepare the next batch while the kernel works.
