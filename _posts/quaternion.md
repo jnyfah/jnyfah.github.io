@@ -1,13 +1,13 @@
 ---
 title: 'Quaternions with C++ implementation'
 excerpt: 'Dont get me wrong: matrices are awesome, they work great for most transformations'
-coverImage: '/assets/blog/hrbt.jpeg'
+coverImage: '/assets/blog/stay5.jpeg'
 date: '2025-07-05T11:37:01.491Z'
 author:
   name: Jennifer
   picture: '/assets/blog/authors/avatar.jpg'
 ogImage:
-  url: '/assets/blog/hrbt.jpeg'
+  url: '/assets/blog/stay5.jpeg'
 ---
 
 [Full C++ implementation of Quaternions here](https://github.com/JeanPhilippeKernel/RendererEngine/blob/develop/ZEngine/ZEngine/Core/Maths/Quaternion.h) 
