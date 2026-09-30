@@ -1,6 +1,6 @@
 ---
-title: 'NO TITLE YET'
-excerpt: "LA LA LA"
+title: 'My WishList 🇳🇬'
+excerpt: "So if any writer out there is hunting for their next big idea, I am BEGGING, here's my wishlist 🤲🏽"
 coverImage: '/assets/blog/hrbt.jpeg'
 date: '2026-10-01T11:37:01.491Z'
 author:
@@ -24,7 +24,7 @@ Which brings me to my next question:
 
 So I went searching and found this thesis [*The Abolishment of History in Nigerian Primary and Secondary Institutions: The Aftermath, 1983–2021*](https://doi.org/10.6084/m9.figshare.24268552) and yes, I read the whole thing.
 
-Who is this girl that randomly reads other people's theses 😌 YES it's me! And hellooo, we are not mates!! 🫵🏼 (joking). But it was quite interesting, and my favorite thing from it was this quote from Cicero:
+Who is this girl that randomly reads other people's theses 😌 YES it's me! And hellooo, we are not mates!! 🫵🏼 (just joking). But it was quite interesting, and my favorite thing from it was this quote from Cicero:
 
 > To be ignorant of what occurred before you were born is to remain always a child. For what is the worth of human life, unless it is woven into the life of our ancestors by the records of history?
 
@@ -36,7 +36,7 @@ Don't worry, I'll give you a quick summary of the thesis, because I know you're 
 
 According to Obasa (2022), the Europeans believed we were an ahistorical continent (my first thought reading this was: why do we even care what the Europeans think??!  well, their opinion mattered because they held the colonial power, and their ideas about what counted as knowledge got embedded into the institutions that governed Africans), and that African history only *"began"* when Europeans started writing about their own activities in Africa. So we built a nationalist history to prove to the white man that Africa had a history, which in turn strengthened the anti-colonial movements.
 
-And hurray!!, that nationalist history helped push out the British colonial administration by challenging the idea that colonial rule was bringing civilization to a people with no past. But then independence created a different problem: Nigeria now had to figure out how all these different histories, people and identities could coexist inside one state, and nationalist history couldn't solve that.
+And hurray!!, that nationalist history helped push out the British colonial administration by challenging the idea that colonial rule was bringing civilization to a people with no past. But then independence created a different problem, Nigeria now had to figure out how all these different histories, people and identities could coexist inside one state, and nationalist history couldn't solve that.
 
 She also points out that the Structural Adjustment Program (SAP), adopted by Nigeria in 1986, severely crippled the teaching and study of history by shifting the entire educational focus toward immediate, market-driven survival. By forcing deep cuts to public spending and pushing purely utilitarian skills, SAP systematically sidelined the humanities causing what scholars describe as a *"crisis in Nigerian historiography."*
 
@@ -52,9 +52,9 @@ Well. I have a solution. **Historical fiction.**
 
 Calm down 😂 so far so good, I'd say we're trying, there *are* Nigerian historical fictions out there covering Biafra and colonialism, but nowhere near enough, in my opinion and Nigeria has SO. MUCH. HISTORY.
 
-This is why [Born on a Tuesday](https://www.goodreads.com/book/show/27214023-born-on-a-tuesday) will forever be one of my favorite books. It felt like being dropped into a part of Nigeria I almost never get to experience in fiction. [Afonja](https://www.goodreads.com/book/show/42074281-afonja---the-rise) is another good one even though I didn't particularly love the writing, the idea, covering the fall of the Oyo Empire, was soo good.
+This is why [Born on a Tuesday](https://www.goodreads.com/book/show/27214023-born-on-a-tuesday) will forever be one of my favorite books, it felt like being dropped into a part of Nigeria I almost never get to experience in fiction. [Afonja](https://www.goodreads.com/book/show/42074281-afonja---the-rise) is another good one even though I didn't particularly love the writing, the idea, covering the fall of the Oyo Empire, was soo good.
 
-And it's not even just the big events, even the little things I stumble across while reading other books. Like how Buchi Emecheta keeps mentioning that her father fought in Burma (now Myanmar) for the British in WWII, she brings it up in *The Bride Price*, and again in [The Joys of Motherhood](https://www.goodreads.com/book/show/210722.The_Joys_of_Motherhood). Ngũgĩ wa Thiong'o also mentions that Kenyans fought in Burma too, for the British, in his novel [A Grain of Wheat](https://www.goodreads.com/book/show/836746.A_Grain_of_Wheat). So why has nobody written a book about this!!
+And it's not even just the big events, even the little things I stumble across while reading other books, like how Buchi Emecheta keeps mentioning that her father fought in Burma (now Myanmar) for the British in WWII, she brings it up in *The Bride Price*, and again in [The Joys of Motherhood](https://www.goodreads.com/book/show/210722.The_Joys_of_Motherhood). Ngũgĩ wa Thiong'o also mentions that Kenyans fought in Burma too, for the British, in his novel [A Grain of Wheat](https://www.goodreads.com/book/show/836746.A_Grain_of_Wheat). So why has nobody written a book about this!!
 
 Nigerian history is SO much bigger than the handful of stories we keep telling. So if any writer out there is hunting for their next big idea, I am BEGGING, here's my wishlist 🤲🏽
 
@@ -74,7 +74,7 @@ Nigerian history is SO much bigger than the handful of stories we keep telling. 
 - The **1983 coup**
 - **Abacha-era Nigeria**
 
-And I can go on and on!! There are SO MANY stories. But here's the thing: what I want most is to read them from the perspective of the people actually living through them, not the current-affairs style of *"here is the historical event, here are the important men who caused it, and these are the dates."*
+And I can go on and on!! there are SO MANY stories. But here's the thing, what I want most is to read them from the perspective of the people actually living through them, not the current-affairs style of *"here is the historical event, here are the important men who caused it, and these are the dates."*
 
 Give me the trader watching her city change.
 
@@ -92,9 +92,9 @@ I can't wait to get my hands on [Yorùbá Boy Running](https://www.goodreads.com
 
 ---
 
-I know writing historical fiction is a lot more work, all that deep research you have to do to stay accurate and not misinform people, but I beseech you, brethren: we can do hard things! Hard things that are worthwhile.
+I know writing historical fiction is a lot more work, all that deep research you have to do to stay accurate and not misinform people, but I beseech you brethren, we can do hard things! Hard things that are worthwhile.
 
-And no, before anyone tells me to *be the change* and go write one myself: I WON'T! 🙂 We can't all be writers. I'm not a writer, I'm a READER!!
+And no, before anyone tells me to *be the change* and go write one myself, I WON'T! 🙂 We can't all be writers. I'm not a writer, I'm a READER!!
 
 My job is to want these stories loudly, to buy them, to shove them into people's hands, and to be first in line when they finally exist. Wanting them out loud is its own kind of contribution.
 
