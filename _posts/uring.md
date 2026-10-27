@@ -2,7 +2,7 @@
 title: 'io_uring without liburing'
 excerpt: 'io_uring is a Linux kernel interface for submitting many I/O operations asynchronously and collecting the results later, without blocking'
 coverImage: '/assets/blog/uring.jpeg'
-date: '2026-07-17T11:37:01.491Z'
+date: '2026-10-17T11:37:01.491Z'
 author:
   name: Jennifer
   picture: '/assets/blog/authors/avatar.jpg'
